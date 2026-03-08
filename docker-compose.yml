@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  db:
+    image: supabase/postgres:15.1.0.147
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+
+  studio:
+    image: supabase/studio:latest
+    ports:
+      - "8000:8000"
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: postgres
+      DEFAULT_ORGANIZATION: QTRIP
+      DEFAULT_PROJECT: QTRIP_LOCAL
+
+  kong:
+    image: kong:2.8.1
+    ports:
+      - "8001:8001"
+      - "8443:8443"
+      - "8000:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl
+    volumes:
+      - ./kong.yml:/var/lib/kong/kong.yml:ro
+
+  auth:
+    image: supabase/gotrue:latest
+    ports:
+      - "9999:9999"
+    environment:
+      GOTRUE_JWT_SECRET: your-super-secret-jwt-token-with-at-least-32-characters
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_DB_DRIVER: postgres
+      DB_NAMESPACE: auth
+      API_EXTERNAL_URL: http://localhost:8000
+      GOTRUE_API_HOST: 0.0.0.0
+      PORT: 9999
+      GOTRUE_SITE_URL: http://localhost:5197
+      GOTRUE_OPERATOR_TOKEN: super-secret-operator-token
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+
+  rest:
+    image: postgrest/postgrest:latest
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: postgres://postgres:postgres@db:5432/postgres
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: your-super-secret-jwt-token-with-at-least-32-characters
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+
+  meta:
+    image: supabase/postgres-meta:latest
+    ports:
+      - "8080:8080"
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: db
+      PG_META_DB_PASSWORD: postgres
+
+networks:
+  default:
+    name: supabase

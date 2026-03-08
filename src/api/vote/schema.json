@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "votes",
+  "info": {
+    "singularName": "vote",
+    "pluralName": "votes",
+    "displayName": "Vote"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "activity": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::activity.activity",
+      "required": true
+    },
+    "user": {
+      "type": "string",
+      "required": true
+    },
+    "sessionId": {
+      "type": "string",
+      "required": true
+    },
+    "createdAt": {
+      "type": "datetime"
+    },
+    "updatedAt": {
+      "type": "datetime"
+    }
+  },
+  "indexes": [
+    {
+      "name": "votes_activity_user_unique",
+      "columns": ["activity", "user"],
+      "type": "unique"
+    }
+  ]
+}

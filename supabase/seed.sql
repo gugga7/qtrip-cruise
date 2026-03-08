@@ -1,0 +1,5 @@
+-- Seed data is included in the catalog_tables migration (20260308100000).
+-- This file is intentionally left minimal.
+--
+-- The migration seeds: 3 destinations, 38 activities, 9 accommodations,
+-- 6 transports, and 1 AI config for the bachelor niche.

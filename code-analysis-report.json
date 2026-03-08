@@ -1,0 +1,477 @@
+{
+  "timestamp": "2024-12-19T19:28:29.373Z",
+  "results": {
+    "Duplicate Functions": [
+      {
+        "function": "const handleQuickAdd = (e: React.MouseEvent, activity: Activity) =>",
+        "files": [
+          "src/components/GroupRecommendations.tsx",
+          "src/components/RecommendedActivities.tsx"
+        ]
+      },
+      {
+        "function": "const handleQuickRemove = (e: React.MouseEvent, activity: Activity) =>",
+        "files": [
+          "src/components/GroupRecommendations.tsx",
+          "src/components/RecommendedActivities.tsx"
+        ]
+      },
+      {
+        "function": "const handleVote = (e: React.MouseEvent, activity: Activity) =>",
+        "files": [
+          "src/components/GroupRecommendations.tsx",
+          "src/components/RecommendedActivities.tsx"
+        ]
+      },
+      {
+        "function": "function ActivityFilters(",
+        "files": [
+          "src/components/ActivityFilters.tsx",
+          "src/components/TripPlanner/components/ActivityFilters.tsx"
+        ]
+      },
+      {
+        "function": "const formatDate = (date: string) =>",
+        "files": [
+          "src/components/TripSummary.tsx",
+          "src/components/TripSummaryReview.tsx"
+        ]
+      },
+      {
+        "function": "const handleQuickRemove = (e: React.MouseEvent, activity: Activity) =>",
+        "files": [
+          "src/components/GroupRecommendations.tsx",
+          "src/pages/Activities.tsx"
+        ]
+      }
+    ],
+    "Optimization Conflicts": [
+      {
+        "type": "stores Implementation",
+        "file": "src/components/CostBreakdown.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/DailyItinerary.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/GroupRecommendations.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/Navigation.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/RecommendedActivities.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/TravelDocuments.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/TripPlanner/components/ExpenseSplitting.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/TripSummary.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/TripSummaryReview.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/components/destination/DestinationGuide.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/hooks/useScheduleOptimizer.ts",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/hooks/useStepValidation.ts",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/Accommodation.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/Activities.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/Preferences.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/ReviewBook.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/Schedule.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/pages/Transport.tsx",
+        "match": "useTripStore"
+      },
+      {
+        "type": "managers Implementation",
+        "file": "src/services/aiScheduleManager.ts",
+        "match": "class AIScheduleManager"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/store/tripStore.ts",
+        "match": "useTripStore"
+      },
+      {
+        "type": "stores Implementation",
+        "file": "src/utils/activityHandlers.ts",
+        "match": "useTripStore"
+      }
+    ],
+    "Store Usage Conflicts": [
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/CostBreakdown.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/DailyItinerary.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/DailyItinerary.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/GroupRecommendations.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/GroupRecommendations.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/Navigation.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/RecommendedActivities.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/RecommendedActivities.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TravelDocuments.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TravelDocuments.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripPlanner/components/ExpenseSplitting.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripPlanner/components/ExpenseSplitting.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripSummary.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripSummary.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripSummaryReview.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/TripSummaryReview.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/destination/DestinationGuide.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/components/destination/DestinationGuide.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/hooks/useScheduleOptimizer.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/hooks/useScheduleOptimizer.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/hooks/useStepValidation.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/hooks/useStepValidation.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Accommodation.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Accommodation.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Activities.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Activities.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Preferences.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Preferences.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/ReviewBook.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/ReviewBook.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Schedule.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Schedule.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Transport.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/pages/Transport.tsx"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/store/tripStore.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/utils/activityHandlers.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/utils/activityHandlers.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/utils/activityHandlers.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "store": "useTripStore",
+        "files": [
+          "src/components/CostBreakdown.tsx",
+          "src/utils/activityHandlers.ts"
+        ],
+        "type": "Multiple Store Usage"
+      },
+      {
+        "file": "src/utils/activityHandlers.ts",
+        "type": "Direct Store Mutation",
+        "warning": "Direct store mutations found. Consider using hooks instead."
+      }
+    ],
+    "Unused Imports": [],
+    "Route Conflicts": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bookings",
+  "info": {
+    "singularName": "booking",
+    "pluralName": "bookings",
+    "displayName": "Booking"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
+    "travelers": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "totalCost": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "activities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::activity.activity"
+    },
+    "accommodation": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::accommodation.accommodation"
+    },
+    "transport": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::transport.transport"
+    },
+    "destination": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::destination.destination",
+      "required": true
+    },
+    "comments": {
+      "type": "text"
+    },
+    "schedule": {
+      "type": "json"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(git checkout:*)",
+      "Bash(git:*)",
+      "Bash(npm run:*)",
+      "Bash(lsof:*)",
+      "WebSearch",
+      "Bash(npx supabase:*)",
+      "Bash(curl:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(npm install:*)",
+      "Bash(perl:*)",
+      "Bash(do perl:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(__NEW_LINE_9da5ed879f70c5dc__ echo:*)",
+      "Bash(__NEW_LINE_2c5b66fb1c91d916__ echo:*)",
+      "Bash(npx vitest:*)"
+    ]
+  }
+}

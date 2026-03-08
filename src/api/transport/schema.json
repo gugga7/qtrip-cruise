@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "transports",
+  "info": {
+    "singularName": "transport",
+    "pluralName": "transports",
+    "displayName": "Transport"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Sedan",
+        "Luxury Sedan",
+        "SUV",
+        "Luxury SUV",
+        "Sprinter",
+        "Limousine"
+      ],
+      "required": true
+    },
+    "provider": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "features": {
+      "type": "json",
+      "required": true
+    },
+    "duration": {
+      "type": "string",
+      "required": true
+    },
+    "destination": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::destination.destination",
+      "inversedBy": "transports"
+    }
+  }
+}

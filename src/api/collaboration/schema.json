@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collaborations",
+  "info": {
+    "singularName": "collaboration",
+    "pluralName": "collaborations",
+    "displayName": "Collaboration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "booking": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::booking.booking",
+      "required": true
+    },
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "required": true
+    },
+    "collaborators": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "accepted", "declined"],
+      "default": "pending"
+    },
+    "expenses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::expense.expense",
+      "mappedBy": "collaboration"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899"/>
+      <stop offset="50%" style="stop-color:#f43f5e"/>
+      <stop offset="100%" style="stop-color:#d946ef"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="100" cy="100" r="200" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="1100" cy="530" r="180" fill="rgba(255,255,255,0.08)"/>
+  <text x="600" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="96" font-weight="bold" fill="white" text-anchor="middle">QTRIP</text>
+  <text x="600" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="rgba(255,255,255,0.85)" text-anchor="middle">Plan the ultimate celebration</text>
+  <text x="600" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="rgba(255,255,255,0.6)" text-anchor="middle">Marrakech  &#x2022;  Marbella  &#x2022;  Algarve</text>
+</svg>
