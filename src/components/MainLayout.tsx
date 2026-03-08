@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Navigation } from './Navigation';
@@ -17,6 +18,7 @@ const steps = [
 export function MainLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const mainRef = useRef<HTMLElement>(null);
   const currentPath = location.pathname.split('/')[1] || 'preferences';
   const currentStep = steps.findIndex((step) => step.path === currentPath) + 1;
   const handleStepChange = (stepId: number) => {
@@ -24,11 +26,17 @@ export function MainLayout() {
     if (step) navigate(`/${step.path}`);
   };
 
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPath]);
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <Navigation steps={steps} currentStep={currentStep} onStepChange={handleStepChange} />
       <div className="flex flex-1 overflow-hidden">
-        <main id="main-content" className="flex-1 overflow-y-auto">
+        <main ref={mainRef} id="main-content" className="flex-1 overflow-y-auto">
           <motion.div
             key={currentPath}
             initial={{ opacity: 0, y: 8 }}

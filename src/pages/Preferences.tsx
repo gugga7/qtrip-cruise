@@ -107,58 +107,114 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
         )}
       </section>
 
-      {/* Dates, Travelers & Budget — single row */}
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-2 text-slate-700">
-            <CalendarDays className={tc.textPrimaryMid} size={18} />
-            <h3 className="font-semibold">{t('preferences.travelDates')}</h3>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="space-y-1">
-              <span className="text-xs font-medium text-slate-500">{t('preferences.start')}</span>
-              <input type="date" min={new Date().toISOString().split('T')[0]} value={startDate ?? ''} onChange={(e) => setDates(e.target.value || null, endDate)} className={`w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none ${tc.focusInput}`} />
-            </label>
-            <label className="space-y-1">
-              <span className="text-xs font-medium text-slate-500">{t('preferences.end')}</span>
-              <input type="date" min={startDate ?? new Date().toISOString().split('T')[0]} value={endDate ?? ''} onChange={(e) => setDates(startDate, e.target.value || null)} className={`w-full rounded-xl border px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 ${
-                dateError
-                  ? 'border-red-400 focus:border-red-400 focus:ring-red-100'
-                  : `border-slate-200 ${tc.focusInput}`
-              }`} />
-              {dateError && (
-                <p className="mt-1 text-xs text-red-500">{t('preferences.validationDatesOrder')}</p>
-              )}
-            </label>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-2 text-slate-700">
-            <Users className={tc.textPrimaryMid} size={18} />
-            <h3 className="font-semibold">{t('common.travelers')}</h3>
-          </div>
-          <div className="flex items-center justify-between">
-            <p className="text-2xl font-semibold text-slate-900">{travelers}</p>
-            <div className="flex items-center gap-2">
-              <button onClick={() => setTravelers(Math.max(1, travelers - 1))} className="rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">-</button>
-              <button onClick={() => setTravelers(travelers + 1)} className="rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">+</button>
+      {/* Dates, Travelers & Budget */}
+      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        {/* ── Travel dates ── */}
+        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
+          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
+                <CalendarDays className="text-white" size={18} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">{t('preferences.travelDates')}</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">{t('preferences.start')}</span>
+                <input
+                  type="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={startDate ?? ''}
+                  onChange={(e) => setDates(e.target.value || null, endDate)}
+                  className={`w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-medium text-slate-800 shadow-sm transition-all focus:outline-none focus:shadow-md ${tc.focusInput}`}
+                />
+              </div>
+              <div>
+                <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">{t('preferences.end')}</span>
+                <input
+                  type="date"
+                  min={startDate ?? new Date().toISOString().split('T')[0]}
+                  value={endDate ?? ''}
+                  onChange={(e) => setDates(startDate, e.target.value || null)}
+                  className={`w-full rounded-xl border bg-white px-3.5 py-3 text-sm font-medium text-slate-800 shadow-sm transition-all focus:outline-none focus:shadow-md focus:ring-2 ${
+                    dateError
+                      ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
+                      : `border-slate-200 ${tc.focusInput}`
+                  }`}
+                />
+                {dateError && (
+                  <p className="mt-1.5 text-xs font-medium text-red-500">{t('preferences.validationDatesOrder')}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-2 text-slate-700">
-            <Coins className={tc.textPrimaryMid} size={18} />
-            <h3 className="font-semibold">{t('preferences.budget')}</h3>
+        {/* ── Travelers ── */}
+        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
+          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
+                <Users className="text-white" size={18} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">{t('common.travelers')}</h3>
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <span className="text-5xl font-extrabold tracking-tight text-slate-900 tabular-nums">{travelers}</span>
+              </div>
+              <div className="flex items-center gap-2 pb-1">
+                <button
+                  onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full border-2 border-slate-200 text-slate-500 text-xl font-medium transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 active:scale-90`}
+                >
+                  −
+                </button>
+                <button
+                  onClick={() => setTravelers(travelers + 1)}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full border-2 border-slate-200 text-slate-500 text-xl font-medium transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 active:scale-90`}
+                >
+                  +
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center rounded-xl border border-slate-200 px-3 py-2.5">
-            <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="bg-transparent pr-2 text-sm font-medium text-slate-600 focus:outline-none">
-              <option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="MAD">MAD</option>
-            </select>
-            <input type="number" min={0} value={budget || ''} onChange={(e) => setBudget(Number(e.target.value || 0), 'total')} className="w-full bg-transparent text-sm font-semibold text-slate-900 focus:outline-none" placeholder="4500" />
+        </div>
+
+        {/* ── Budget ── */}
+        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
+          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-5">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
+                <Coins className="text-white" size={18} />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">{t('preferences.budget')}</h3>
+            </div>
+            <div className="flex items-center rounded-xl border-2 border-slate-200 bg-white shadow-sm transition-all focus-within:border-slate-300 focus-within:shadow-md focus-within:ring-2 focus-within:ring-slate-100">
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="rounded-l-xl border-r border-slate-200 bg-slate-50 py-3 pl-4 pr-2 text-sm font-bold text-slate-500 focus:outline-none"
+              >
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="MAD">MAD</option>
+              </select>
+              <input
+                type="number"
+                min={0}
+                value={budget || ''}
+                onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
+                className="w-full bg-transparent py-3 px-4 text-lg font-bold text-slate-900 focus:outline-none"
+                placeholder="4500"
+              />
+            </div>
+            <p className="mt-3 text-xs font-medium text-slate-400">{t('preferences.budgetHint')}</p>
           </div>
-          <p className="mt-2 text-xs text-slate-500">{t('preferences.budgetHint')}</p>
         </div>
       </section>
 

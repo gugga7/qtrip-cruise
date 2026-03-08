@@ -78,7 +78,7 @@ export const routes = [
         element: (() => {
           const PreferencesStep = () => {
             const navigate = useNavigate();
-            return <Preferences onNext={() => navigate('/activities')} onBack={() => navigate(-1)} />;
+            return <Preferences onNext={() => navigate('/activities')} onBack={() => navigate('/home')} />;
           };
           return <PreferencesStep />;
         })(),
@@ -89,7 +89,7 @@ export const routes = [
         element: (() => {
           const ActivitiesStep = () => {
             const navigate = useNavigate();
-            return <Activities onNext={() => navigate('/transport')} onBack={() => navigate(-1)} />;
+            return <Activities onNext={() => navigate('/transport')} onBack={() => navigate('/preferences')} />;
           };
           return <ActivitiesStep />;
         })(),
@@ -100,7 +100,7 @@ export const routes = [
         element: (() => {
           const TransportStep = () => {
             const navigate = useNavigate();
-            return <Transport onNext={() => navigate('/accommodation')} onBack={() => navigate(-1)} />;
+            return <Transport onNext={() => navigate('/accommodation')} onBack={() => navigate('/activities')} />;
           };
           return <TransportStep />;
         })(),
@@ -111,7 +111,7 @@ export const routes = [
         element: (() => {
           const AccommodationStep = () => {
             const navigate = useNavigate();
-            return <Accommodation onNext={() => navigate('/schedule')} onBack={() => navigate(-1)} />;
+            return <Accommodation onNext={() => navigate('/schedule')} onBack={() => navigate('/transport')} />;
           };
           return <AccommodationStep />;
         })(),
@@ -122,7 +122,7 @@ export const routes = [
         element: (() => {
           const ScheduleStep = () => {
             const navigate = useNavigate();
-            return <Schedule onNext={() => navigate('/review')} onBack={() => navigate(-1)} />;
+            return <Schedule onNext={() => navigate('/review')} onBack={() => navigate('/accommodation')} />;
           };
           return <ScheduleStep />;
         })(),
@@ -133,7 +133,7 @@ export const routes = [
         element: (() => {
           const ReviewStep = () => {
             const navigate = useNavigate();
-            return <ReviewBook onNext={() => navigate('/')} onBack={() => navigate(-1)} />;
+            return <ReviewBook onNext={() => navigate('/')} onBack={() => navigate('/schedule')} />;
           };
           return <ReviewStep />;
         })(),
