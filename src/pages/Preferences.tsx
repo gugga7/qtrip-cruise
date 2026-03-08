@@ -1,4 +1,3 @@
-import { Users, Coins } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDestinations } from '../hooks/useCatalog';
@@ -29,7 +28,7 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
   return (
     <div className="space-y-6 pb-28">
       {/* Hero with embedded controls */}
-      <section className={`overflow-hidden rounded-2xl bg-gradient-to-br ${activeNiche.theme.heroGradient} text-white shadow-md`}>
+      <section className={`rounded-2xl bg-gradient-to-br ${activeNiche.theme.heroGradient} text-white shadow-md`}>
         <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1.2fr_0.8fr]">
           {/* Left: title + inline controls */}
           <div className="space-y-5">
@@ -56,22 +55,19 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
               {/* Travelers + Budget row */}
               <div className="grid grid-cols-2 gap-3">
                 {/* Travelers */}
-                <div className="flex items-center gap-3 rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
-                  <Users size={18} className="shrink-0 text-white/70" />
-                  <div className="flex-1 min-w-0">
-                    <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">{t('common.travelers')}</span>
-                    <span className="block text-lg font-bold tabular-nums">{travelers}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
+                <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-4 backdrop-blur-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/50">{t('common.travelers')}</span>
+                  <div className="mt-2 flex items-center gap-4">
                     <button
                       onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-sm font-medium text-white/80 transition-all hover:bg-white/10 active:scale-90"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-lg font-bold text-white shadow-sm transition-all hover:bg-white/25 hover:shadow-md active:scale-90"
                     >
                       −
                     </button>
+                    <span className="min-w-[2ch] text-center text-3xl font-extrabold tabular-nums">{travelers}</span>
                     <button
                       onClick={() => setTravelers(travelers + 1)}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-sm font-medium text-white/80 transition-all hover:bg-white/10 active:scale-90"
+                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-lg font-bold text-white shadow-sm transition-all hover:bg-white/25 hover:shadow-md active:scale-90"
                     >
                       +
                     </button>
@@ -79,29 +75,26 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
                 </div>
 
                 {/* Budget */}
-                <div className="flex items-center gap-3 rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
-                  <Coins size={18} className="shrink-0 text-white/70" />
-                  <div className="flex-1 min-w-0">
-                    <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">{t('preferences.budget')}</span>
-                    <div className="flex items-center gap-1.5">
-                      <select
-                        value={currency}
-                        onChange={(e) => setCurrency(e.target.value)}
-                        className="bg-transparent text-xs font-bold text-white/70 focus:outline-none [&>option]:text-slate-900"
-                      >
-                        <option value="EUR">EUR</option>
-                        <option value="USD">USD</option>
-                        <option value="GBP">GBP</option>
-                      </select>
-                      <input
-                        type="number"
-                        min={0}
-                        value={budget || ''}
-                        onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
-                        className="w-full bg-transparent text-lg font-bold text-white placeholder-white/30 focus:outline-none"
-                        placeholder="4500"
-                      />
-                    </div>
+                <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-4 backdrop-blur-sm">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/50">{t('preferences.budget')}</span>
+                  <div className="mt-2 flex items-center gap-2">
+                    <select
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      className="bg-transparent text-sm font-bold text-white/60 focus:outline-none [&>option]:text-slate-900"
+                    >
+                      <option value="EUR">EUR</option>
+                      <option value="USD">USD</option>
+                      <option value="GBP">GBP</option>
+                    </select>
+                    <input
+                      type="number"
+                      min={0}
+                      value={budget || ''}
+                      onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
+                      className="w-24 bg-transparent text-center text-3xl font-extrabold text-white placeholder-white/30 focus:outline-none"
+                      placeholder="4500"
+                    />
                   </div>
                 </div>
               </div>

@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { DayPicker, type DateRange } from 'react-day-picker';
 import { format, differenceInDays } from 'date-fns';
 import { CalendarDays, ChevronDown } from 'lucide-react';
@@ -15,7 +16,9 @@ interface DateRangeCalendarProps {
 export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRangeCalendarProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
 
   const selected: DateRange | undefined =
     startDate || endDate
@@ -39,10 +42,39 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
     }
   };
 
+  // Position the dropdown relative to trigger
+  const updatePos = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({
+      top: rect.bottom + window.scrollY + 8,
+      left: rect.left + window.scrollX,
+      width: Math.max(rect.width, 640),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      updatePos();
+      window.addEventListener('scroll', updatePos, true);
+      window.addEventListener('resize', updatePos);
+    }
+    return () => {
+      window.removeEventListener('scroll', updatePos, true);
+      window.removeEventListener('resize', updatePos);
+    };
+  }, [open, updatePos]);
+
   // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (
+        triggerRef.current && !triggerRef.current.contains(target) &&
+        dropdownRef.current && !dropdownRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
     };
     if (open) document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -54,9 +86,10 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
   };
 
   return (
-    <div ref={ref} className="relative">
+    <div className="relative">
       {/* Trigger */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen(!open)}
         className={`w-full flex items-center gap-3 rounded-2xl border-2 bg-white px-4 py-3.5 text-left transition-all hover:shadow-md ${
@@ -64,7 +97,6 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
         }`}
       >
         <div className="flex flex-1 items-center gap-3 min-w-0">
-          {/* From */}
           <div className="flex-1 min-w-0">
             <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
               {t('preferences.start')}
@@ -74,12 +106,10 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
             </span>
           </div>
 
-          {/* Arrow */}
           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${tc.bgPrimaryMuted}`}>
             <span className={`text-sm font-bold ${tc.textPrimary}`}>→</span>
           </div>
 
-          {/* To */}
           <div className="flex-1 min-w-0">
             <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
               {t('preferences.end')}
@@ -90,7 +120,6 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
           </div>
         </div>
 
-        {/* Night badge + chevron */}
         <div className="flex shrink-0 items-center gap-2">
           {nightCount !== null && nightCount > 0 && (
             <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${tc.tagPrimary}`}>
@@ -104,10 +133,19 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
         </div>
       </button>
 
-      {/* Dropdown calendar */}
-      {open && (
-        <div className="absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] animate-in">
-          <div className="rdp-custom p-4 flex justify-center">
+      {/* Portal dropdown — renders outside parent overflow constraints */}
+      {open && createPortal(
+        <div
+          ref={dropdownRef}
+          className="fixed z-[9999] rounded-2xl border border-slate-200 bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.18)] animate-in"
+          style={{
+            top: pos.top,
+            left: pos.left,
+            width: pos.width,
+            position: 'absolute',
+          }}
+        >
+          <div className="rdp-custom p-5 flex justify-center">
             <DayPicker
               mode="range"
               selected={selected}
@@ -115,6 +153,9 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
               numberOfMonths={2}
               disabled={{ before: new Date() }}
               showOutsideDays
+              classNames={{
+                months: 'rdp-months flex flex-row gap-8',
+              }}
               modifiersClassNames={{
                 selected: 'rdp-day--selected',
                 range_start: 'rdp-day--range-start',
@@ -123,8 +164,7 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
               }}
             />
           </div>
-          {/* Footer */}
-          <div className="flex items-center gap-2 border-t border-slate-100 bg-slate-50/80 px-4 py-3">
+          <div className="flex items-center gap-2 border-t border-slate-100 bg-slate-50/80 px-5 py-3 rounded-b-2xl">
             <CalendarDays size={14} className="text-slate-400" />
             <span className="text-xs text-slate-400">
               {startDate && endDate
@@ -132,7 +172,8 @@ export function DateRangeCalendar({ startDate, endDate, onDatesChange }: DateRan
                 : 'Click a start date, then an end date'}
             </span>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

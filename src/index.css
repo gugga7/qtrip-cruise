@@ -13,6 +13,16 @@
   display: none;
 }
 
+/* Hide native number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 /* ── React Day Picker v8 overrides ── */
 .rdp-custom {
   --rdp-cell-size: 42px;
@@ -25,8 +35,10 @@
   font-family: inherit;
 }
 .rdp-custom .rdp-months {
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 2rem;
   justify-content: center;
 }
 .rdp-custom .rdp-caption_label {
