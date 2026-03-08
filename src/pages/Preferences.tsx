@@ -28,22 +28,93 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
 
   return (
     <div className="space-y-6 pb-28">
-      {/* Hero */}
+      {/* Hero with embedded controls */}
       <section className={`overflow-hidden rounded-2xl bg-gradient-to-br ${activeNiche.theme.heroGradient} text-white shadow-md`}>
         <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-4">
-            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {t('preferences.heroTitle')}
-            </h1>
-            <p className="max-w-xl text-sm text-slate-300 sm:text-base">
-              {t('preferences.heroSubtitle')}
-            </p>
-            <div className="flex flex-wrap gap-2 text-xs text-slate-300">
+          {/* Left: title + inline controls */}
+          <div className="space-y-5">
+            <div className="space-y-3">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                {t('preferences.heroTitle')}
+              </h1>
+              <p className="max-w-xl text-sm text-white/70 sm:text-base">
+                {t('preferences.heroSubtitle')}
+              </p>
+            </div>
+
+            {/* ── Inline controls: dates, travelers, budget ── */}
+            <div className="space-y-3">
+              {/* Date range */}
+              <div className="relative">
+                <DateRangeCalendar
+                  startDate={startDate}
+                  endDate={endDate}
+                  onDatesChange={(start, end) => setDates(start, end)}
+                />
+              </div>
+
+              {/* Travelers + Budget row */}
+              <div className="grid grid-cols-2 gap-3">
+                {/* Travelers */}
+                <div className="flex items-center gap-3 rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <Users size={18} className="shrink-0 text-white/70" />
+                  <div className="flex-1 min-w-0">
+                    <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">{t('common.travelers')}</span>
+                    <span className="block text-lg font-bold tabular-nums">{travelers}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setTravelers(Math.max(1, travelers - 1))}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-sm font-medium text-white/80 transition-all hover:bg-white/10 active:scale-90"
+                    >
+                      −
+                    </button>
+                    <button
+                      onClick={() => setTravelers(travelers + 1)}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 text-sm font-medium text-white/80 transition-all hover:bg-white/10 active:scale-90"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Budget */}
+                <div className="flex items-center gap-3 rounded-2xl border-2 border-white/15 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                  <Coins size={18} className="shrink-0 text-white/70" />
+                  <div className="flex-1 min-w-0">
+                    <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">{t('preferences.budget')}</span>
+                    <div className="flex items-center gap-1.5">
+                      <select
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                        className="bg-transparent text-xs font-bold text-white/70 focus:outline-none [&>option]:text-slate-900"
+                      >
+                        <option value="EUR">EUR</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                      </select>
+                      <input
+                        type="number"
+                        min={0}
+                        value={budget || ''}
+                        onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
+                        className="w-full bg-transparent text-lg font-bold text-white placeholder-white/30 focus:outline-none"
+                        placeholder="4500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-xs text-white/60">
               <span className="rounded-full bg-white/10 px-3 py-1.5">{t('preferences.fastQuote')}</span>
               <span className="rounded-full bg-white/10 px-3 py-1.5">{t('preferences.curatedStays')}</span>
               <span className="rounded-full bg-white/10 px-3 py-1.5">{t('preferences.noPayment')}</span>
             </div>
           </div>
+
+          {/* Right: destination preview */}
           {selectedDestination ? (
             <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
               <img src={selectedDestination.heroImageUrl} alt={selectedDestination.name} className="h-44 w-full object-cover" />
@@ -105,87 +176,6 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
             ))}
           </div>
         )}
-      </section>
-
-      {/* Travel dates — full-width range calendar */}
-      <section className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)]">
-        <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
-        <div className="p-6">
-          <h3 className="mb-4 text-lg font-bold text-slate-900">{t('preferences.travelDates')}</h3>
-          <DateRangeCalendar
-            startDate={startDate}
-            endDate={endDate}
-            onDatesChange={(start, end) => setDates(start, end)}
-          />
-        </div>
-      </section>
-
-      {/* Travelers & Budget */}
-      <section className="grid gap-5 sm:grid-cols-2">
-        {/* ── Travelers ── */}
-        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
-          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
-          <div className="p-6">
-            <div className="flex items-center gap-3 mb-5">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
-                <Users className="text-white" size={18} />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">{t('common.travelers')}</h3>
-            </div>
-            <div className="flex items-end justify-between">
-              <div>
-                <span className="text-5xl font-extrabold tracking-tight text-slate-900 tabular-nums">{travelers}</span>
-              </div>
-              <div className="flex items-center gap-2 pb-1">
-                <button
-                  onClick={() => setTravelers(Math.max(1, travelers - 1))}
-                  className={`flex h-11 w-11 items-center justify-center rounded-full border-2 border-slate-200 text-slate-500 text-xl font-medium transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 active:scale-90`}
-                >
-                  −
-                </button>
-                <button
-                  onClick={() => setTravelers(travelers + 1)}
-                  className={`flex h-11 w-11 items-center justify-center rounded-full border-2 border-slate-200 text-slate-500 text-xl font-medium transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 active:scale-90`}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Budget ── */}
-        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
-          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
-          <div className="p-6">
-            <div className="flex items-center gap-3 mb-5">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
-                <Coins className="text-white" size={18} />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">{t('preferences.budget')}</h3>
-            </div>
-            <div className="flex items-center rounded-xl border-2 border-slate-200 bg-white shadow-sm transition-all focus-within:border-slate-300 focus-within:shadow-md focus-within:ring-2 focus-within:ring-slate-100">
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="rounded-l-xl border-r border-slate-200 bg-slate-50 py-3 pl-4 pr-2 text-sm font-bold text-slate-500 focus:outline-none"
-              >
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-              </select>
-              <input
-                type="number"
-                min={0}
-                value={budget || ''}
-                onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
-                className="w-full bg-transparent py-3 px-4 text-lg font-bold text-slate-900 focus:outline-none"
-                placeholder="4500"
-              />
-            </div>
-            <p className="mt-3 text-xs font-medium text-slate-400">{t('preferences.budgetHint')}</p>
-          </div>
-        </div>
       </section>
 
       {/* Destination insights — only when selected */}
