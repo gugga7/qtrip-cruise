@@ -1,8 +1,9 @@
-import { CalendarDays, Users, Coins } from 'lucide-react';
+import { Users, Coins } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDestinations } from '../hooks/useCatalog';
 import { FloatingContinueButton } from '../components/FloatingContinueButton';
+import { DateRangeCalendar } from '../components/DateRangeCalendar';
 import { DestinationCardSkeleton } from '../components/Skeleton';
 import { useTripStore } from '../store/tripStore';
 import { activeNiche } from '../config/niche';
@@ -24,7 +25,6 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
     if (startDate && endDate && new Date(endDate) <= new Date(startDate)) messages.push(t('preferences.validationDatesOrder'));
     return messages;
   }, [endDate, selectedDestination, startDate]);
-  const dateError = !!(startDate && endDate && new Date(endDate) <= new Date(startDate));
 
   return (
     <div className="space-y-6 pb-28">
@@ -107,50 +107,21 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
         )}
       </section>
 
-      {/* Dates, Travelers & Budget */}
-      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {/* ── Travel dates ── */}
-        <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
-          <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
-          <div className="p-6">
-            <div className="flex items-center gap-3 mb-5">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tc.heroGradient} shadow-sm`}>
-                <CalendarDays className="text-white" size={18} />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900">{t('preferences.travelDates')}</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">{t('preferences.start')}</span>
-                <input
-                  type="date"
-                  min={new Date().toISOString().split('T')[0]}
-                  value={startDate ?? ''}
-                  onChange={(e) => setDates(e.target.value || null, endDate)}
-                  className={`w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-medium text-slate-800 shadow-sm transition-all focus:outline-none focus:shadow-md ${tc.focusInput}`}
-                />
-              </div>
-              <div>
-                <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-400">{t('preferences.end')}</span>
-                <input
-                  type="date"
-                  min={startDate ?? new Date().toISOString().split('T')[0]}
-                  value={endDate ?? ''}
-                  onChange={(e) => setDates(startDate, e.target.value || null)}
-                  className={`w-full rounded-xl border bg-white px-3.5 py-3 text-sm font-medium text-slate-800 shadow-sm transition-all focus:outline-none focus:shadow-md focus:ring-2 ${
-                    dateError
-                      ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
-                      : `border-slate-200 ${tc.focusInput}`
-                  }`}
-                />
-                {dateError && (
-                  <p className="mt-1.5 text-xs font-medium text-red-500">{t('preferences.validationDatesOrder')}</p>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Travel dates — full-width range calendar */}
+      <section className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)]">
+        <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
+        <div className="p-6">
+          <h3 className="mb-4 text-lg font-bold text-slate-900">{t('preferences.travelDates')}</h3>
+          <DateRangeCalendar
+            startDate={startDate}
+            endDate={endDate}
+            onDatesChange={(start, end) => setDates(start, end)}
+          />
         </div>
+      </section>
 
+      {/* Travelers & Budget */}
+      <section className="grid gap-5 sm:grid-cols-2">
         {/* ── Travelers ── */}
         <div className="overflow-hidden rounded-[20px] bg-white shadow-[0_2px_20px_-6px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.03)] transition-shadow hover:shadow-[0_4px_28px_-8px_rgba(0,0,0,0.12)]">
           <div className={`h-1 bg-gradient-to-r ${tc.heroGradient}`} />
@@ -202,7 +173,6 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
                 <option value="EUR">EUR</option>
                 <option value="USD">USD</option>
                 <option value="GBP">GBP</option>
-                <option value="MAD">MAD</option>
               </select>
               <input
                 type="number"
