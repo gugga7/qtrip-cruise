@@ -1,4 +1,5 @@
 import type { Activity, AccommodationType, Destination, TransportType, ScheduleSlotName } from './types';
+import type { PortStop } from '../store/tripStore';
 
 export interface ScheduleAssignment {
   activityId: string;
@@ -29,6 +30,7 @@ export async function fetchAISchedule(
   activities: Activity[],
   accommodation: AccommodationType | null,
   transport: TransportType | null,
+  portSchedule?: PortStop[],
 ): Promise<ScheduleAssignment[]> {
   const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -65,6 +67,14 @@ export async function fetchAISchedule(
         name: transport.name,
         type: transport.type,
       },
+    }),
+    ...(portSchedule && portSchedule.length > 0 && {
+      portSchedule: portSchedule.map(p => ({
+        portIndex: p.portIndex,
+        portName: p.portName,
+        dockArrival: p.dockArrival,
+        dockDeparture: p.dockDeparture,
+      })),
     }),
   };
 

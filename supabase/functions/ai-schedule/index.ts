@@ -22,12 +22,20 @@ interface ActivityInput {
   description: string;
 }
 
+interface PortStopInput {
+  portIndex: number;
+  portName: string;
+  dockArrival: string;
+  dockDeparture: string;
+}
+
 interface ScheduleRequest {
   destination: { name: string; country: string; localTips: string[] };
   days: number;
   activities: ActivityInput[];
   accommodation?: { name: string; location: string; type: string };
   transport?: { name: string; type: string };
+  portSchedule?: PortStopInput[];
 }
 
 interface ScheduleAssignment {
@@ -37,7 +45,21 @@ interface ScheduleAssignment {
   reason?: string;
 }
 
-function buildSystemPrompt(): string {
+function computeReturnTime(departure: string): string {
+  const [h, m] = departure.split(":").map(Number);
+  let totalMinutes = h * 60 + m - 30;
+  if (totalMinutes < 0) totalMinutes = 0;
+  const rh = Math.floor(totalMinutes / 60);
+  const rm = totalMinutes % 60;
+  return `${String(rh).padStart(2, "0")}:${String(rm).padStart(2, "0")}`;
+}
+
+function getAvailableSlots(dockDeparture: string): string[] {
+  const depHour = parseInt(dockDeparture.split(":")[0]);
+  return depHour >= 18 ? ["Morning", "Afternoon", "Evening"] : ["Morning", "Afternoon"];
+}
+
+function buildSystemPrompt(portSchedule?: PortStopInput[]): string {
   return `You are a travel itinerary optimizer. You receive a destination, trip duration, selected activities with details, and optionally accommodation and transport info.
 
 Your job: assign each activity to the best day and time slot for a great travel experience.
@@ -61,13 +83,40 @@ OUTPUT: Return ONLY a valid JSON array. No markdown, no explanation, no code fen
 
 The "reason" field should be a short, friendly explanation of WHY this slot works best (e.g. "Cooler morning temps are ideal for a 4-hour walking tour", "Relaxing spa sessions feel best in the afternoon").
 
-Every activity in the input MUST appear exactly once in the output.`;
+Every activity in the input MUST appear exactly once in the output.`
+  + (portSchedule && portSchedule.length > 0 ? `
+
+PORT-BASED SCHEDULING (CRUISE MODE):
+This is a cruise shore excursion schedule. Each "day" is a PORT STOP with strict dock times.
+
+PORT SCHEDULE:
+${portSchedule.map(p => `Port ${p.portIndex} (Day ${p.portIndex}): ${p.portName} — Dock ${p.dockArrival}–${p.dockDeparture} (available: ${p.dockArrival}–${computeReturnTime(p.dockDeparture)})`).join("\n")}
+
+CRITICAL RULES FOR PORT SCHEDULING:
+- A 30-minute safety buffer before departure is MANDATORY
+- Morning slot = first third of available dock window
+- Afternoon slot = middle third of available dock window
+- Evening slot = last third (ONLY if dock window extends past 17:00)
+- If available dock window is less than 8 hours, use ONLY Morning and Afternoon slots
+- NEVER schedule an activity that would cause travelers to miss the ship
+- Consider 15 minutes travel time from port to first activity` : "");
 }
 
 function buildUserMessage(req: ScheduleRequest): string {
   const lines: string[] = [
     `Destination: ${req.destination.name}, ${req.destination.country}`,
-    `Trip duration: ${req.days} days`,
+  ];
+
+  if (req.portSchedule && req.portSchedule.length > 0) {
+    lines.push(`Port stops: ${req.portSchedule.length}`);
+    for (const p of req.portSchedule) {
+      lines.push(`  Day ${p.portIndex}: ${p.portName} (${p.dockArrival}–${p.dockDeparture})`);
+    }
+  } else {
+    lines.push(`Trip duration: ${req.days} days`);
+  }
+
+  lines.push(
     `Local tips: ${req.destination.localTips.join("; ")}`,
     "",
     "Activities to schedule:",
@@ -143,7 +192,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: KIMI_MODEL,
         messages: [
-          { role: "system", content: buildSystemPrompt() },
+          { role: "system", content: buildSystemPrompt(body.portSchedule) },
           { role: "user", content: buildUserMessage(body) },
         ],
         temperature: 0.3,
@@ -166,14 +215,17 @@ serve(async (req) => {
     const missing = activityIds.filter((id) => !assignedIds.has(id));
     if (missing.length > 0) {
       let nextDay = 1;
-      const slots: ScheduleAssignment["slot"][] = ["Morning", "Afternoon", "Evening"];
       for (const id of missing) {
+        const portForDay = body.portSchedule?.find((p) => p.portIndex === nextDay);
+        const slots: string[] = portForDay
+          ? getAvailableSlots(portForDay.dockDeparture)
+          : ["Morning", "Afternoon", "Evening"];
         const usedSlots = assignments
           .filter((a) => a.day === nextDay)
           .map((a) => a.slot);
         const freeSlot = slots.find((s) => !usedSlots.includes(s));
         if (freeSlot) {
-          assignments.push({ activityId: id, day: nextDay, slot: freeSlot });
+          assignments.push({ activityId: id, day: nextDay, slot: freeSlot as ScheduleAssignment["slot"] });
         } else {
           nextDay++;
           assignments.push({ activityId: id, day: nextDay, slot: "Morning" });

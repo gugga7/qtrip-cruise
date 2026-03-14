@@ -31,7 +31,7 @@ export function useAISchedule(dayCount: number) {
 
   const generate = useCallback(async () => {
     const store = useTripStore.getState();
-    const { selectedDestination, selectedActivities: activities, selectedAccommodation, selectedTransport, scheduleActivity } = store;
+    const { selectedDestination, selectedActivities: activities, selectedAccommodation, selectedTransport, scheduleActivity, portSchedule } = store;
     const days = dayCountRef.current;
 
     if (!selectedDestination || activities.length === 0 || days === 0) return;
@@ -60,6 +60,7 @@ export function useAISchedule(dayCount: number) {
         activities,
         selectedAccommodation,
         selectedTransport,
+        portSchedule,
       );
 
       if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }

@@ -2,6 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Activity, Accommodation, Destination, ScheduleSlotName, Transport } from '../lib/types';
 
+export interface PortStop {
+  portIndex: number;       // 1-indexed, maps to existing "day"
+  destinationId: string;
+  portName: string;
+  dockArrival: string;     // "08:00" HH:mm
+  dockDeparture: string;   // "17:00" HH:mm
+  date: string;            // "2026-04-15"
+}
+
 interface TripState {
   selectedDestination: Destination | null;
   destination: Destination | null;
@@ -32,6 +41,10 @@ interface TripState {
   clearStore: () => void;
   autoSchedule: (activityId: string | number, day: number, slot: ScheduleSlotName) => void;
   reset: () => void;
+  // Cruise port scheduling
+  portSchedule: PortStop[];
+  setPortSchedule: (ports: PortStop[]) => void;
+  updatePortTime: (portIndex: number, field: 'dockArrival' | 'dockDeparture' | 'date', value: string) => void;
 }
 
 const baseState = {
@@ -46,6 +59,7 @@ const baseState = {
   budget: 0,
   budgetType: 'total' as const,
   currency: 'EUR',
+  portSchedule: [] as PortStop[],
 };
 
 const getTripNights = (startDate: string | null, endDate: string | null) => {
@@ -84,6 +98,22 @@ export const useTripStore = create<TripState>()(
         const totalBudget = state.budgetType === 'per_person' ? state.budget * state.travelers : state.budget;
         return totalBudget - state.getTotalCost();
       },
+      // Cruise port scheduling
+      setPortSchedule: (ports) => {
+        const sorted = [...ports].sort((a, b) => a.date.localeCompare(b.date));
+        const startDate = sorted[0]?.date ?? null;
+        const endDate = sorted[sorted.length - 1]?.date ?? null;
+        set({ portSchedule: sorted, startDate, endDate });
+      },
+      updatePortTime: (portIndex, field, value) => set((state) => {
+        const updated = state.portSchedule.map((p) =>
+          p.portIndex === portIndex ? { ...p, [field]: value } : p
+        );
+        const sorted = [...updated].sort((a, b) => a.date.localeCompare(b.date));
+        const startDate = sorted[0]?.date ?? state.startDate;
+        const endDate = sorted[sorted.length - 1]?.date ?? state.endDate;
+        return { portSchedule: sorted, startDate, endDate };
+      }),
       clearTripData: () => set(baseState),
       clearStore: () => set(baseState),
       autoSchedule: (activityId, day, slot) => get().scheduleActivity(activityId, day, slot),

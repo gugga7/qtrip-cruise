@@ -82,7 +82,22 @@
     "continueToActivities": "Continuer vers les activités",
     "validationDestination": "Choisissez une destination pour débloquer les suggestions.",
     "validationDates": "Sélectionnez vos dates de voyage.",
-    "validationDatesOrder": "La date de fin doit être après la date de début."
+    "validationDatesOrder": "La date de fin doit être après la date de début.",
+    "portItinerary": "Itinéraire des escales",
+    "selectPort": "Choisir un port...",
+    "dockIn": "Arrivée",
+    "dockOut": "Départ",
+    "shoreTime": "à terre",
+    "addPort": "Ajouter un port",
+    "dock": "Quai",
+    "yourItinerary": "Votre itinéraire",
+    "addPortsBelow": "Ajoutez des ports pour construire votre itinéraire.",
+    "inItinerary": "Dans l'itinéraire",
+    "validationPorts": "Ajoutez au moins un port à votre itinéraire.",
+    "validationPortDestination": "Sélectionnez une destination pour le port {{index}}.",
+    "validationPortDate": "Définissez une date pour le port {{index}}.",
+    "validationPortTimes": "Définissez les heures d'arrivée et de départ pour le port {{index}}.",
+    "validationPortOrder": "Le départ doit être après l'arrivée pour le port {{index}}."
   },
   "activities": {
     "title": "Choisissez vos expériences à terre",

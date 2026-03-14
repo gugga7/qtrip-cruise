@@ -82,7 +82,22 @@
     "continueToActivities": "Continue to activities",
     "validationDestination": "Choose a destination to unlock the itinerary suggestions.",
     "validationDates": "Select travel dates for your quote.",
-    "validationDatesOrder": "Your end date must be after your start date."
+    "validationDatesOrder": "Your end date must be after your start date.",
+    "portItinerary": "Port itinerary",
+    "selectPort": "Select port...",
+    "dockIn": "Dock in",
+    "dockOut": "Depart",
+    "shoreTime": "shore time",
+    "addPort": "Add another port",
+    "dock": "Dock",
+    "yourItinerary": "Your itinerary",
+    "addPortsBelow": "Add ports to build your shore itinerary.",
+    "inItinerary": "In itinerary",
+    "validationPorts": "Add at least one port to your itinerary.",
+    "validationPortDestination": "Select a destination for port {{index}}.",
+    "validationPortDate": "Set a date for port {{index}}.",
+    "validationPortTimes": "Set dock arrival and departure times for port {{index}}.",
+    "validationPortOrder": "Departure must be after arrival for port {{index}}."
   },
   "activities": {
     "title": "Choose your shore experiences",

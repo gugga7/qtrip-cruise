@@ -7,12 +7,47 @@ import { useAISchedule } from '../hooks/useAISchedule';
 import { useFeature } from '../hooks/useNiche';
 import type { Activity, ScheduleSlotName } from '../lib/types';
 import { useTripStore } from '../store/tripStore';
+import type { PortStop } from '../store/tripStore';
 import { tc } from '../config/themeClasses';
 import { activeNiche, type CategoryColor } from '../config/niche';
 
 interface ScheduleProps { onNext: () => void; onBack: () => void; }
 
 const slots: ScheduleSlotName[] = ['Morning', 'Afternoon', 'Evening'];
+
+/* ── Port-aware time utilities ── */
+function timeToMinutes(time: string): number {
+  const [h, m] = time.split(':').map(Number);
+  return h * 60 + (m || 0);
+}
+
+function minutesToTime(mins: number): string {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+function getAvailableSlots(port: PortStop): ScheduleSlotName[] {
+  const depHour = parseInt(port.dockDeparture.split(':')[0]);
+  return depHour >= 18
+    ? ['Morning', 'Afternoon', 'Evening']
+    : ['Morning', 'Afternoon'];
+}
+
+function getPortSlotTimes(port: PortStop) {
+  const arrMin = timeToMinutes(port.dockArrival);
+  const depMin = timeToMinutes(port.dockDeparture) - 30; // safety buffer
+  const third = Math.floor((depMin - arrMin) / 3);
+  return {
+    Morning: `${port.dockArrival} – ${minutesToTime(arrMin + third)}`,
+    Afternoon: `${minutesToTime(arrMin + third)} – ${minutesToTime(arrMin + 2 * third)}`,
+    Evening: `${minutesToTime(arrMin + 2 * third)} – ${minutesToTime(depMin)}`,
+  };
+}
+
+function getPortAbbrev(name: string): string {
+  return name.slice(0, 3).toUpperCase();
+}
 
 /* ── Category colors (from niche config) ── */
 const defaultColor: CategoryColor = { bg: 'bg-slate-50', border: 'border-slate-300', text: 'text-slate-700', badge: 'bg-slate-100 text-slate-700', dot: 'bg-slate-400', light: 'bg-slate-50/60' };
@@ -126,6 +161,7 @@ function ActivityCard({
   activity,
   reason,
   dayCount,
+  portSchedule,
   isRevealing,
   index,
   revealedCount,
@@ -136,6 +172,7 @@ function ActivityCard({
   activity: Activity;
   reason?: string;
   dayCount: number;
+  portSchedule: PortStop[];
   isRevealing: boolean;
   index: number;
   revealedCount: number;
@@ -207,6 +244,8 @@ function ActivityCard({
             {Array.from({ length: dayCount }, (_, i) => {
               const day = i + 1;
               const isActive = currentDay === day;
+              const port = portSchedule[i];
+              const label = port ? getPortAbbrev(port.portName) : String(day);
               return (
                 <button
                   key={day}
@@ -214,13 +253,16 @@ function ActivityCard({
                     onSchedule(activity.id, day, currentSlot as ScheduleSlotName || 'Morning');
                     onDaySelect(day);
                   }}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-all ${
+                  title={port ? port.portName : `Day ${day}`}
+                  className={`flex h-8 items-center justify-center rounded-full text-xs font-semibold transition-all ${
+                    port ? 'min-w-[2.5rem] px-2' : 'w-8'
+                  } ${
                     isActive
                       ? `${tc.dayBtnActive} scale-110`
                       : `bg-slate-100 text-slate-600 ${tc.dayBtnHover}`
                   }`}
                 >
-                  {day}
+                  {label}
                 </button>
               );
             })}
@@ -231,25 +273,29 @@ function ActivityCard({
         <div className="mt-2.5 space-y-2">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{t('schedule.timeSlot')}</span>
           <div className="flex gap-2">
-            {slots.map((slot) => {
-              const meta = slotMeta[slot];
-              const SlotIcon = meta.icon;
-              const isActive = currentSlot === slot;
-              return (
-                <button
-                  key={slot}
-                  onClick={() => onSchedule(activity.id, currentDay || 1, slot)}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                    isActive
-                      ? `bg-gradient-to-r ${meta.gradient} text-slate-800 shadow-sm ring-1 ring-slate-200 scale-[1.03]`
-                      : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
-                  }`}
-                >
-                  <SlotIcon size={14} className={isActive ? 'text-slate-700' : 'text-slate-400'} />
-                  {t(meta.labelKey)}
-                </button>
-              );
-            })}
+            {(() => {
+              const selectedPort = currentDay > 0 ? portSchedule[currentDay - 1] : undefined;
+              const availableSlots = selectedPort ? getAvailableSlots(selectedPort) : slots;
+              return availableSlots.map((slot) => {
+                const meta = slotMeta[slot];
+                const SlotIcon = meta.icon;
+                const isActive = currentSlot === slot;
+                return (
+                  <button
+                    key={slot}
+                    onClick={() => onSchedule(activity.id, currentDay || 1, slot)}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                      isActive
+                        ? `bg-gradient-to-r ${meta.gradient} text-slate-800 shadow-sm ring-1 ring-slate-200 scale-[1.03]`
+                        : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                    }`}
+                  >
+                    <SlotIcon size={14} className={isActive ? 'text-slate-700' : 'text-slate-400'} />
+                    {t(meta.labelKey)}
+                  </button>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
@@ -258,7 +304,7 @@ function ActivityCard({
 }
 
 /* ── Day preview slot ── */
-function PreviewSlot({ slot, item, isActiveDay }: { slot: ScheduleSlotName; item: Activity | null; isActiveDay: boolean }) {
+function PreviewSlot({ slot, item, isActiveDay, portTimeOverride }: { slot: ScheduleSlotName; item: Activity | null; isActiveDay: boolean; portTimeOverride?: string }) {
   const { t } = useTranslation();
   const meta = slotMeta[slot];
   const SlotIcon = meta.icon;
@@ -272,7 +318,7 @@ function PreviewSlot({ slot, item, isActiveDay }: { slot: ScheduleSlotName; item
       <div className={`flex items-center gap-2 rounded-t-lg bg-gradient-to-r px-3 py-1.5 ${meta.gradient}`}>
         <SlotIcon size={12} className="text-slate-500" />
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t(meta.labelKey)}</span>
-        <span className="text-[10px] text-slate-400">{meta.time}</span>
+        <span className="text-[10px] text-slate-400">{portTimeOverride || meta.time}</span>
       </div>
       <div className="px-3 py-2">
         <AnimatePresence mode="wait">
@@ -310,11 +356,13 @@ function PreviewSlot({ slot, item, isActiveDay }: { slot: ScheduleSlotName; item
 }
 
 /* ── Day card in preview ── */
-function DayPreview({ dayNumber, items, revealingDay }: { dayNumber: number; items: (Activity | null)[]; revealingDay: number }) {
+function DayPreview({ dayNumber, items, revealingDay, port, daySlots }: { dayNumber: number; items: (Activity | null)[]; revealingDay: number; port: PortStop | null; daySlots: ScheduleSlotName[] }) {
   const { t } = useTranslation();
   const hasAnyActivity = items.some(Boolean);
   const allFilled = items.every(Boolean);
   const isActiveDay = dayNumber === revealingDay;
+  const portSlotTimes = port ? getPortSlotTimes(port) : null;
+  const returnTime = port ? minutesToTime(timeToMinutes(port.dockDeparture) - 30) : null;
 
   return (
     <motion.div
@@ -327,26 +375,44 @@ function DayPreview({ dayNumber, items, revealingDay }: { dayNumber: number; ite
           : 'bg-slate-50/50'
       }`}
     >
-      <div className="mb-3 flex items-center gap-2">
-        <p className="font-semibold text-slate-900">{t('schedule.day')} {dayNumber}</p>
-        {allFilled && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100"
-          >
-            <Check size={12} className="text-emerald-600" />
-          </motion.div>
+      <div className="mb-3">
+        <div className="flex items-center gap-2">
+          {port ? (
+            <p className="font-semibold text-slate-900">Port {port.portIndex}: {port.portName}</p>
+          ) : (
+            <p className="font-semibold text-slate-900">{t('schedule.day')} {dayNumber}</p>
+          )}
+          {allFilled && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100"
+            >
+              <Check size={12} className="text-emerald-600" />
+            </motion.div>
+          )}
+        </div>
+        {port && (
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-medium text-sky-700 ring-1 ring-sky-200">
+              ⚓ Dock {port.dockArrival} – {port.dockDeparture}
+            </span>
+            {returnTime && (
+              <span className="text-[10px] font-medium text-amber-600">
+                All aboard by {returnTime}
+              </span>
+            )}
+          </div>
         )}
       </div>
       <div className="space-y-2">
-        {slots.map((slot, slotIndex) => {
+        {daySlots.map((slot, slotIndex) => {
           const item = items[slotIndex];
           return (
             <div key={`${dayNumber}-${slot}`}>
-              <PreviewSlot slot={slot} item={item} isActiveDay={isActiveDay} />
+              <PreviewSlot slot={slot} item={item} isActiveDay={isActiveDay} portTimeOverride={portSlotTimes?.[slot]} />
               {/* Connector line between filled adjacent slots */}
-              {slotIndex < slots.length - 1 && item && items[slotIndex + 1] && (
+              {slotIndex < daySlots.length - 1 && item && items[slotIndex + 1] && (
                 <div className="flex justify-center py-0.5">
                   <div className="h-3 w-px border-l border-dashed border-slate-300" />
                 </div>
@@ -363,12 +429,13 @@ function DayPreview({ dayNumber, items, revealingDay }: { dayNumber: number; ite
 export function Schedule({ onNext, onBack }: ScheduleProps) {
   const { t } = useTranslation();
   const aiEnabled = useFeature('aiSchedule');
-  const { startDate, endDate, selectedActivities, scheduleActivity, unscheduleActivity } = useTripStore();
+  const { startDate, endDate, selectedActivities, scheduleActivity, unscheduleActivity, portSchedule } = useTripStore();
   const dayCount = useMemo(() => {
+    if (portSchedule.length > 0) return portSchedule.length;
     if (!startDate || !endDate) return Math.max(selectedActivities.length, 1);
     const diff = new Date(endDate).getTime() - new Date(startDate).getTime();
     return Math.max(Math.ceil(diff / (1000 * 60 * 60 * 24)), 1);
-  }, [endDate, selectedActivities.length, startDate]);
+  }, [endDate, selectedActivities.length, startDate, portSchedule]);
 
   const { phase, thinkingMessage, revealedCount, assignments, error, retry } = useAISchedule(aiEnabled ? dayCount : 0);
 
@@ -389,17 +456,21 @@ export function Schedule({ onNext, onBack }: ScheduleProps) {
   }, [phase, revealedCount, assignments]);
 
   const preview = useMemo(() =>
-    Array.from({ length: dayCount }, (_, index) => ({
-      day: index + 1,
-      items: slots.map((slot) =>
-        selectedActivities.find(
-          (activity) =>
-            activity.scheduled?.day === index + 1 &&
-            activity.scheduled?.slot === slot
-        ) || null
-      ),
-    })),
-  [dayCount, selectedActivities]);
+    Array.from({ length: dayCount }, (_, index) => {
+      const port = portSchedule[index]; // undefined for non-cruise
+      const availableSlots = port ? getAvailableSlots(port) : slots;
+      return {
+        day: index + 1,
+        port: port || null,
+        items: availableSlots.map((slot) =>
+          selectedActivities.find(
+            (a) => a.scheduled?.day === index + 1 && a.scheduled?.slot === slot
+          ) || null
+        ),
+        slots: availableSlots,
+      };
+    }),
+  [dayCount, selectedActivities, portSchedule]);
 
   // Scroll-to-day logic for the preview pane
   const previewRef = useRef<HTMLDivElement>(null);
@@ -475,6 +546,7 @@ export function Schedule({ onNext, onBack }: ScheduleProps) {
               activity={activity}
               reason={reasonMap.get(activity.id)}
               dayCount={dayCount}
+              portSchedule={portSchedule}
               isRevealing={phase === 'revealing'}
               index={index}
               revealedCount={revealedCount}
@@ -500,6 +572,8 @@ export function Schedule({ onNext, onBack }: ScheduleProps) {
                   dayNumber={day.day}
                   items={day.items}
                   revealingDay={revealingDay}
+                  port={day.port}
+                  daySlots={day.slots}
                 />
               </div>
             ))}
