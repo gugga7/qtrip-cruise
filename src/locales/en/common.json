@@ -13,7 +13,8 @@
     "profile": "Profile",
     "signOut": "Sign out",
     "signIn": "Sign in",
-    "language": "Language"
+    "language": "Language",
+    "plan": "Shore Plan"
   },
   "common": {
     "continue": "Continue",
@@ -97,7 +98,10 @@
     "validationPortDestination": "Select a destination for port {{index}}.",
     "validationPortDate": "Set a date for port {{index}}.",
     "validationPortTimes": "Set dock arrival and departure times for port {{index}}.",
-    "validationPortOrder": "Departure must be after arrival for port {{index}}."
+    "validationPortOrder": "Departure must be after arrival for port {{index}}.",
+    "whatVibes": "What's your vibe?",
+    "validationVibes": "Select at least one activity vibe.",
+    "generatePlan": "Generate my shore plan"
   },
   "activities": {
     "title": "Choose your shore experiences",
@@ -400,5 +404,28 @@
     "message": "The page you're looking for doesn't exist or has been moved.",
     "goBack": "Go back",
     "goHome": "Back to home"
+  },
+  "shorePlan": {
+    "title": "Your Shore Plan",
+    "subtitle": "AI-curated activities for each port. Swap anything that doesn't feel right.",
+    "thinking": "Building your shore plan...",
+    "allAboard": "All aboard by",
+    "shoreTime": "shore time",
+    "freeTime": "Free time",
+    "swap": "Swap",
+    "remove": "Remove",
+    "addActivity": "Add activity",
+    "swapTitle": "Swap activity",
+    "swapSubtitle": "Choose an alternative for this time slot",
+    "noAlternatives": "No alternatives available for this slot",
+    "portCost": "Port cost",
+    "totalCost": "Total",
+    "perPerson": "per person",
+    "continueToBook": "Continue to book",
+    "retryGenerate": "Try again",
+    "browseManually": "Or browse activities manually",
+    "generateError": "Couldn't generate your shore plan",
+    "noActivitiesForPort": "No activities available for this port yet",
+    "whyThis": "Why this?"
   }
 }

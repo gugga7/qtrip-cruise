@@ -31,8 +31,8 @@ export function Navigation({ steps, currentStep, onStepChange }: NavigationProps
 
   const navLinks = [
     { label: t('nav.preferences'), icon: MapPin, step: 1 },
-    { label: t('nav.activities'), icon: Sparkles, step: 2 },
-    { label: t('nav.schedule'), icon: Clock, step: 5 },
+    { label: t('nav.plan') || 'Shore Plan', icon: Sparkles, step: 2 },
+    { label: t('nav.review'), icon: Clock, step: 3 },
   ];
 
   return (

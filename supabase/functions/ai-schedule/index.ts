@@ -169,6 +169,64 @@ function parseSchedule(text: string, activityIds: string[]): ScheduleAssignment[
   return assignments;
 }
 
+function buildPlanSystemPrompt(vibes: string[], totalBudget: number, travelers: number): string {
+  return `You are a cruise shore excursion concierge. For each port, SELECT the best 2-3 activities from the provided catalog AND assign them to time slots.
+
+SELECTION CRITERIA:
+- Strongly prefer activities matching these vibes: ${vibes.join(', ')}
+- Total budget across ALL ports: €${totalBudget} for ${travelers} travelers (€${Math.round(totalBudget / travelers)}/person)
+- Pick a balanced mix — avoid selecting multiple activities from the same category
+- Prefer unique local experiences over generic tourist activities
+
+SCHEDULING RULES:
+- Time slots: Morning, Afternoon, Evening (each = one third of the dock window)
+- A 30-minute safety buffer before ship departure is MANDATORY
+- If dock window is less than 8 hours, use ONLY Morning and Afternoon slots (no Evening)
+- Maximum one activity per slot
+- Consider 15 minutes travel time from port to first activity
+
+OUTPUT: Return ONLY valid JSON. No markdown, no explanation:
+{"plan": [{"portIndex": 1, "activities": [{"activityId": "id", "slot": "Morning", "reason": "8-12 word reason"}]}]}
+
+Every port MUST have at least one activity. Select 2-3 per port (fewer for short dock windows under 6 hours).`;
+}
+
+function buildPlanUserMessage(ports: any[]): string {
+  const lines: string[] = [];
+  for (const port of ports) {
+    lines.push(`\nPort ${port.portIndex}: ${port.name} (Dock ${port.dockArrival}–${port.dockDeparture})`);
+    lines.push('Available activities:');
+    for (const a of port.catalog || []) {
+      lines.push(`  - ID: ${a.id} | "${a.title}" | ${a.duration}h | €${a.price}/person | Category: ${a.category} | ${a.description?.slice(0, 80) || 'N/A'}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+function parsePlanResponse(text: string): any[] {
+  let cleaned = text.trim();
+  if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
+  }
+
+  const parsed = JSON.parse(cleaned);
+  const plan = parsed.plan || parsed;
+  if (!Array.isArray(plan)) throw new Error('Plan response is not an array');
+
+  const validSlots = ['Morning', 'Afternoon', 'Evening'];
+
+  return plan.map((portPlan: any) => ({
+    portIndex: portPlan.portIndex,
+    activities: (portPlan.activities || []).filter((a: any) =>
+      typeof a.activityId === 'string' && validSlots.includes(a.slot)
+    ).map((a: any) => ({
+      activityId: a.activityId,
+      slot: a.slot,
+      reason: typeof a.reason === 'string' ? a.reason : '',
+    })),
+  }));
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -181,6 +239,41 @@ serve(async (req) => {
     }
 
     const body: ScheduleRequest = await req.json();
+
+    // Plan mode: select AND schedule activities
+    if ((body as any).mode === 'plan') {
+      const planBody = body as any;
+      const planPrompt = buildPlanSystemPrompt(planBody.vibes || [], planBody.totalBudget || 0, planBody.travelers || 2);
+      const planUserMsg = buildPlanUserMessage(planBody.ports || []);
+
+      const planResponse = await fetch(`${KIMI_BASE_URL}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${kimiKey}` },
+        body: JSON.stringify({
+          model: KIMI_MODEL,
+          messages: [
+            { role: 'system', content: planPrompt },
+            { role: 'user', content: planUserMsg },
+          ],
+          temperature: 0.3,
+        }),
+      });
+
+      if (!planResponse.ok) {
+        const err = await planResponse.text();
+        throw new Error(`Kimi API error: ${planResponse.status} ${err}`);
+      }
+
+      const planData = await planResponse.json();
+      const planContent = planData.choices?.[0]?.message?.content;
+      if (!planContent) throw new Error('Empty response from Kimi');
+
+      const plan = parsePlanResponse(planContent);
+      return new Response(JSON.stringify({ plan }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const activityIds = body.activities.map((a) => a.id);
 
     const response = await fetch(`${KIMI_BASE_URL}/chat/completions`, {

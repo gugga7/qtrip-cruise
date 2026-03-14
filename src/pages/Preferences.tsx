@@ -9,6 +9,15 @@ import type { PortStop } from '../store/tripStore';
 import { activeNiche } from '../config/niche';
 import { tc } from '../config/themeClasses';
 
+const VIBE_OPTIONS = [
+  { label: 'Culture & History', value: 'Cultural Deep Dive', emoji: '🏛️' },
+  { label: 'Food & Local Flavour', value: 'Food & Local Flavour', emoji: '🍽️' },
+  { label: 'Beach & Water', value: 'Beach & Water', emoji: '🏖️' },
+  { label: 'Adventure & Active', value: 'Adventure & Active', emoji: '🏄' },
+  { label: 'Shopping & Markets', value: 'Shopping & Markets', emoji: '🛍️' },
+  { label: 'Scenic & Landmarks', value: 'Must-See Landmarks', emoji: '📸' },
+];
+
 interface PreferencesProps {
   onNext: () => void;
   onBack: () => void;
@@ -16,7 +25,7 @@ interface PreferencesProps {
 
 export function Preferences({ onNext, onBack }: PreferencesProps) {
   const { t } = useTranslation();
-  const { travelers, budget, currency, portSchedule, setPortSchedule, setTravelers, setBudget, setCurrency, setDestination, selectedDestination } = useTripStore();
+  const { travelers, budget, currency, portSchedule, setPortSchedule, setTravelers, setBudget, setCurrency, setDestination, selectedDestination, vibePreferences, setVibePreferences } = useTripStore();
   const { destinations, loading } = useDestinations();
 
   /* ── Port management ── */
@@ -92,8 +101,9 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
         break;
       }
     }
+    if (vibePreferences.length === 0) messages.push(t('preferences.validationVibes'));
     return messages;
-  }, [portSchedule, t]);
+  }, [portSchedule, vibePreferences, t]);
 
   return (
     <div className="space-y-6 pb-28">
@@ -245,6 +255,37 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
               </div>
             </div>
 
+            {/* Vibe Selector */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/50">
+                {t('preferences.whatVibes')}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {VIBE_OPTIONS.map((vibe) => {
+                  const isActive = vibePreferences.includes(vibe.value);
+                  return (
+                    <button
+                      key={vibe.value}
+                      onClick={() => {
+                        setVibePreferences(
+                          isActive
+                            ? vibePreferences.filter((v) => v !== vibe.value)
+                            : [...vibePreferences, vibe.value]
+                        );
+                      }}
+                      className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all ${
+                        isActive
+                          ? 'bg-white/25 text-white shadow-sm ring-1 ring-white/30'
+                          : 'bg-white/10 text-white/60 hover:bg-white/15 hover:text-white/80'
+                      }`}
+                    >
+                      {vibe.emoji} {vibe.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="flex flex-wrap gap-2 text-xs text-white/60">
               <span className="rounded-full bg-white/10 px-3 py-1.5">{t('preferences.fastQuote')}</span>
               <span className="rounded-full bg-white/10 px-3 py-1.5">{t('preferences.curatedStays')}</span>
@@ -365,7 +406,7 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
         </section>
       )}
 
-      <FloatingContinueButton onContinue={onNext} onBack={onBack} isValid={validationMessages.length === 0} currentStep={1} totalSteps={6} validationMessages={validationMessages} nextText={t('preferences.continueToActivities')} />
+      <FloatingContinueButton onContinue={onNext} onBack={onBack} isValid={validationMessages.length === 0} currentStep={1} totalSteps={3} validationMessages={validationMessages} nextText={t('preferences.generatePlan')} />
     </div>
   );
 }

@@ -13,7 +13,8 @@
     "profile": "Profil",
     "signOut": "Se déconnecter",
     "signIn": "Se connecter",
-    "language": "Langue"
+    "language": "Langue",
+    "plan": "Plan d'escale"
   },
   "common": {
     "continue": "Continuer",
@@ -97,7 +98,10 @@
     "validationPortDestination": "Sélectionnez une destination pour le port {{index}}.",
     "validationPortDate": "Définissez une date pour le port {{index}}.",
     "validationPortTimes": "Définissez les heures d'arrivée et de départ pour le port {{index}}.",
-    "validationPortOrder": "Le départ doit être après l'arrivée pour le port {{index}}."
+    "validationPortOrder": "Le départ doit être après l'arrivée pour le port {{index}}.",
+    "whatVibes": "Quelle est votre ambiance ?",
+    "validationVibes": "Sélectionnez au moins une ambiance.",
+    "generatePlan": "Générer mon plan d'escale"
   },
   "activities": {
     "title": "Choisissez vos expériences à terre",
@@ -400,5 +404,28 @@
     "message": "La page que vous cherchez n'existe pas ou a été déplacée.",
     "goBack": "Retour",
     "goHome": "Retour à l'accueil"
+  },
+  "shorePlan": {
+    "title": "Votre plan d'escale",
+    "subtitle": "Activités sélectionnées par l'IA pour chaque port. Échangez ce qui ne vous convient pas.",
+    "thinking": "Construction de votre plan d'escale...",
+    "allAboard": "Embarquement avant",
+    "shoreTime": "à terre",
+    "freeTime": "Temps libre",
+    "swap": "Échanger",
+    "remove": "Supprimer",
+    "addActivity": "Ajouter une activité",
+    "swapTitle": "Échanger l'activité",
+    "swapSubtitle": "Choisissez une alternative pour ce créneau",
+    "noAlternatives": "Aucune alternative disponible pour ce créneau",
+    "portCost": "Coût du port",
+    "totalCost": "Total",
+    "perPerson": "par personne",
+    "continueToBook": "Continuer vers la réservation",
+    "retryGenerate": "Réessayer",
+    "browseManually": "Ou parcourir les activités manuellement",
+    "generateError": "Impossible de générer votre plan d'escale",
+    "noActivitiesForPort": "Aucune activité disponible pour ce port",
+    "whyThis": "Pourquoi ?"
   }
 }

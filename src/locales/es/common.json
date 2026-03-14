@@ -13,7 +13,8 @@
     "profile": "Perfil",
     "signOut": "Cerrar sesión",
     "signIn": "Iniciar sesión",
-    "language": "Idioma"
+    "language": "Idioma",
+    "plan": "Plan de puerto"
   },
   "common": {
     "continue": "Continuar",
@@ -97,7 +98,10 @@
     "validationPortDestination": "Selecciona un destino para el puerto {{index}}.",
     "validationPortDate": "Establece una fecha para el puerto {{index}}.",
     "validationPortTimes": "Establece las horas de llegada y salida para el puerto {{index}}.",
-    "validationPortOrder": "La salida debe ser después de la llegada para el puerto {{index}}."
+    "validationPortOrder": "La salida debe ser después de la llegada para el puerto {{index}}.",
+    "whatVibes": "¿Cuál es tu estilo?",
+    "validationVibes": "Selecciona al menos un estilo de actividad.",
+    "generatePlan": "Generar mi plan de puerto"
   },
   "activities": {
     "title": "Elige tus experiencias en tierra",
@@ -400,5 +404,28 @@
     "message": "La página que buscas no existe o ha sido movida.",
     "goBack": "Volver",
     "goHome": "Volver al inicio"
+  },
+  "shorePlan": {
+    "title": "Tu plan de puerto",
+    "subtitle": "Actividades seleccionadas por IA para cada puerto. Cambia lo que no te convenza.",
+    "thinking": "Construyendo tu plan de puerto...",
+    "allAboard": "Embarque antes de las",
+    "shoreTime": "en tierra",
+    "freeTime": "Tiempo libre",
+    "swap": "Cambiar",
+    "remove": "Eliminar",
+    "addActivity": "Añadir actividad",
+    "swapTitle": "Cambiar actividad",
+    "swapSubtitle": "Elige una alternativa para esta franja",
+    "noAlternatives": "No hay alternativas disponibles para esta franja",
+    "portCost": "Coste del puerto",
+    "totalCost": "Total",
+    "perPerson": "por persona",
+    "continueToBook": "Continuar a reservar",
+    "retryGenerate": "Intentar de nuevo",
+    "browseManually": "O explorar actividades manualmente",
+    "generateError": "No se pudo generar tu plan de puerto",
+    "noActivitiesForPort": "Aún no hay actividades disponibles para este puerto",
+    "whyThis": "¿Por qué esto?"
   }
 }

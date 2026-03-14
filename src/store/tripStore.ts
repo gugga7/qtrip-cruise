@@ -45,6 +45,13 @@ interface TripState {
   portSchedule: PortStop[];
   setPortSchedule: (ports: PortStop[]) => void;
   updatePortTime: (portIndex: number, field: 'dockArrival' | 'dockDeparture' | 'date', value: string) => void;
+  // AI concierge
+  vibePreferences: string[];
+  setVibePreferences: (vibes: string[]) => void;
+  aiReasons: Record<string, string>;
+  setAIReasons: (reasons: Record<string, string>) => void;
+  clearAIReasons: () => void;
+  setSelectedActivitiesFromPlan: (activities: Activity[]) => void;
 }
 
 const baseState = {
@@ -60,6 +67,8 @@ const baseState = {
   budgetType: 'total' as const,
   currency: 'EUR',
   portSchedule: [] as PortStop[],
+  vibePreferences: [] as string[],
+  aiReasons: {} as Record<string, string>,
 };
 
 const getTripNights = (startDate: string | null, endDate: string | null) => {
@@ -114,6 +123,11 @@ export const useTripStore = create<TripState>()(
         const endDate = sorted[sorted.length - 1]?.date ?? state.endDate;
         return { portSchedule: sorted, startDate, endDate };
       }),
+      // AI concierge
+      setVibePreferences: (vibes) => set({ vibePreferences: vibes }),
+      setAIReasons: (reasons) => set({ aiReasons: reasons }),
+      clearAIReasons: () => set({ aiReasons: {} }),
+      setSelectedActivitiesFromPlan: (activities) => set({ selectedActivities: activities }),
       clearTripData: () => set(baseState),
       clearStore: () => set(baseState),
       autoSchedule: (activityId, day, slot) => get().scheduleActivity(activityId, day, slot),

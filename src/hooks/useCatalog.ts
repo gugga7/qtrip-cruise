@@ -222,3 +222,52 @@ export function useTransports(destinationId?: string | null) {
 
   return { transports, loading };
 }
+
+/* ── Multi-Port Catalog (for cruise concierge) ── */
+export function useMultiPortCatalog(destinationIds: string[]): {
+  catalogs: Record<string, Activity[]>;
+  loading: boolean;
+} {
+  const [catalogs, setCatalogs] = useState<Record<string, Activity[]>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (destinationIds.length === 0) { setLoading(false); return; }
+    setLoading(true);
+
+    const uniqueIds = [...new Set(destinationIds)];
+    Promise.all(
+      uniqueIds.map(async (destId) => {
+        if (!supabase) return { destId, activities: [] as Activity[] };
+        const { data } = await supabase
+          .from('activities')
+          .select('*')
+          .eq('destination_id', destId)
+          .eq('is_active', true);
+        const activities = (data ?? []).map((row: Record<string, unknown>) => ({
+          id: row.id as string,
+          destinationId: row.destination_id as string,
+          title: (row.title as string) || (row.name as string) || '',
+          description: (row.description as string) || '',
+          duration: Number(row.duration) || 2,
+          price: Number(row.price) || 0,
+          category: (row.category as string) || '',
+          location: (row.location as string) || '',
+          tags: (row.tags as string[]) || [],
+          mainImageUrl: (row.main_image_url as string) || '',
+          galleryUrls: [],
+        })) as Activity[];
+        return { destId, activities };
+      })
+    ).then((results) => {
+      const map: Record<string, Activity[]> = {};
+      for (const { destId, activities } of results) {
+        map[destId] = activities;
+      }
+      setCatalogs(map);
+      setLoading(false);
+    });
+  }, [destinationIds.join(',')]);
+
+  return { catalogs, loading };
+}

@@ -108,3 +108,64 @@ export async function fetchAISchedule(
 
   return data.assignments as ScheduleAssignment[];
 }
+
+interface PortPlanRequest {
+  portIndex: number;
+  name: string;
+  country: string;
+  dockArrival: string;
+  dockDeparture: string;
+  catalog: Array<{
+    id: string;
+    title: string;
+    duration: number;
+    price: number;
+    category: string;
+    description: string;
+    location?: string;
+    tags?: string[];
+  }>;
+}
+
+export interface PlanAssignment {
+  portIndex: number;
+  activities: Array<{
+    activityId: string;
+    slot: ScheduleSlotName;
+    reason: string;
+  }>;
+}
+
+export async function fetchAIPlan(
+  ports: PortPlanRequest[],
+  travelers: number,
+  totalBudget: number,
+  vibes: string[],
+): Promise<PlanAssignment[]> {
+  const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
+  if (!functionsUrl) throw new Error('Missing Supabase configuration');
+
+  const response = await fetch(`${functionsUrl}/ai-schedule`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      mode: 'plan',
+      ports,
+      travelers,
+      totalBudget,
+      vibes,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`AI plan generation failed: ${text}`);
+  }
+
+  const data = await response.json();
+  if (!data.plan || !Array.isArray(data.plan)) {
+    throw new Error('Invalid AI plan response');
+  }
+
+  return data.plan as PlanAssignment[];
+}
