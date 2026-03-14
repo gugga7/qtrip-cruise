@@ -128,7 +128,11 @@
     "chooseSub": "Choose the activities that fit your shore time. We'll schedule them to get you back to the ship on time.",
     "continueToTransport": "Continue to transport",
     "noActivities": "No activities available yet",
-    "noActivitiesSub": "Activities for this destination are being curated. Check back soon or try another destination."
+    "noActivitiesSub": "Activities for this destination are being curated. Check back soon or try another destination.",
+    "filterAll": "All",
+    "filterDay": "Day",
+    "filterNight": "Night",
+    "noResultsFilter": "No activities match this filter. Try a different one."
   },
   "transport": {
     "title": "Getting from the dock",

@@ -128,7 +128,11 @@
     "chooseSub": "Choisissez les activités adaptées à votre temps à terre. Nous les planifierons pour vous ramener au navire à temps.",
     "continueToTransport": "Continuer vers le transport",
     "noActivities": "Aucune activité disponible",
-    "noActivitiesSub": "Les activités pour cette destination sont en cours de préparation. Revenez bientôt ou essayez une autre destination."
+    "noActivitiesSub": "Les activités pour cette destination sont en cours de préparation. Revenez bientôt ou essayez une autre destination.",
+    "filterAll": "Tout",
+    "filterDay": "Jour",
+    "filterNight": "Nuit",
+    "noResultsFilter": "Aucune activité ne correspond à ce filtre. Essayez un autre."
   },
   "transport": {
     "title": "Depuis le quai",
