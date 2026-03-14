@@ -33,7 +33,7 @@ export function Login() {
       }
 
       // Link trip to newly authenticated user if tripId exists
-      if (state?.tripId) {
+      if (state?.tripId && supabase) {
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser) {
           await supabase

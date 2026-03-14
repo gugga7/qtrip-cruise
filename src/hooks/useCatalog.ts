@@ -17,6 +17,11 @@ export function useDestinations() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     supabase
       .from('destinations')
       .select('*')
@@ -71,6 +76,12 @@ export function useActivities(destinationId?: string | null) {
       return;
     }
 
+    if (!supabase) {
+      setActivities(localActivities(destinationId));
+      setLoading(false);
+      return;
+    }
+
     supabase
       .from('activities')
       .select('*')
@@ -118,6 +129,12 @@ export function useAccommodations(destinationId?: string | null) {
       return;
     }
 
+    if (!supabase) {
+      setAccommodations(localAccommodations(destinationId));
+      setLoading(false);
+      return;
+    }
+
     supabase
       .from('accommodations')
       .select('*')
@@ -161,6 +178,12 @@ export function useTransports(destinationId?: string | null) {
   useEffect(() => {
     if (!destinationId) {
       setTransports([]);
+      setLoading(false);
+      return;
+    }
+
+    if (!supabase) {
+      setTransports(localTransports(destinationId));
       setLoading(false);
       return;
     }

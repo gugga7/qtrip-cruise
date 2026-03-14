@@ -50,6 +50,12 @@ export function Activities({ onNext, onBack }: ActivitiesProps) {
             <ActivityCardSkeleton key={i} />
           ))}
         </section>
+      ) : activities.length === 0 ? (
+        <section className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+          <Compass size={40} className="mx-auto text-slate-200" />
+          <p className="mt-3 text-lg font-medium text-slate-600">{t('activities.noActivities')}</p>
+          <p className="mt-1 text-sm text-slate-400">{t('activities.noActivitiesSub')}</p>
+        </section>
       ) : (
         <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {activities.map((activity) => (

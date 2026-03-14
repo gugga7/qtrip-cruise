@@ -91,7 +91,7 @@ export function Preferences({ onNext, onBack }: PreferencesProps) {
                       type="number"
                       min={0}
                       value={budget || ''}
-                      onChange={(e) => setBudget(Number(e.target.value || 0), 'total')}
+                      onChange={(e) => setBudget(Math.max(0, Number(e.target.value || 0)), 'total')}
                       className="w-24 bg-transparent text-center text-3xl font-extrabold text-white placeholder-white/30 focus:outline-none"
                       placeholder="4500"
                     />

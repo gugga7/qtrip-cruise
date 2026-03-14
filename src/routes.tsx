@@ -20,6 +20,7 @@ const Profile = React.lazy(() => import('./pages/Profile').then(m => ({ default:
 const JoinGroup = React.lazy(() => import('./pages/JoinGroup').then(m => ({ default: m.JoinGroup })));
 const BookingDetail = React.lazy(() => import('./pages/BookingDetail').then(m => ({ default: m.BookingDetail })));
 const Routes = React.lazy(() => import('./pages/Routes').then(m => ({ default: m.Routes })));
+const NotFound = React.lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
 
 // Lazy-loaded: admin pages
 const Dashboard = React.lazy(() => import('./admin/pages/Dashboard').then(m => ({ default: m.Dashboard })));
@@ -177,4 +178,8 @@ export const adminRoutes = [
   }
 ];
 
-export const router = createBrowserRouter([...routes, ...adminRoutes]);
+export const router = createBrowserRouter([
+  ...routes,
+  ...adminRoutes,
+  { path: '*', element: <Lazy><NotFound /></Lazy> },
+]);

@@ -107,7 +107,9 @@
     "sectionTitle": "Expériences sélectionnées",
     "whatToInclude": "Que souhaitez-vous inclure à {{destination}} ?",
     "chooseSub": "Choisissez les activités essentielles. Nous les utiliserons pour construire votre itinéraire et devis.",
-    "continueToTransport": "Continuer vers le transport"
+    "continueToTransport": "Continuer vers le transport",
+    "noActivities": "Aucune activité disponible",
+    "noActivitiesSub": "Les activités pour cette destination sont en cours de préparation. Revenez bientôt ou essayez une autre destination."
   },
   "transport": {
     "title": "Se déplacer",
@@ -217,7 +219,9 @@
     "validationEmail": "L'e-mail est requis.",
     "validationPhone": "Le téléphone est requis.",
     "validationIncomplete": "Veuillez compléter les éléments manquants :",
-    "createAccount": "Créer un compte"
+    "createAccount": "Créer un compte",
+    "validationEmailFormat": "Veuillez entrer une adresse e-mail valide.",
+    "validationPhoneFormat": "Veuillez entrer un numéro de téléphone valide."
   },
   "profile": {
     "title": "Votre profil",
@@ -238,7 +242,8 @@
     "notifBookings": "Confirmations de réservation",
     "notifBookingsDesc": "Quand votre voyage est confirmé",
     "notifGroup": "Activité du groupe",
-    "notifGroupDesc": "Quand quelqu'un rejoint ou répond"
+    "notifGroupDesc": "Quand quelqu'un rejoint ou répond",
+    "profileUpdated": "Profil mis à jour avec succès."
   },
   "group": {
     "title": "Votre groupe",
@@ -374,5 +379,11 @@
     "title": "Vote dress code",
     "votes": "votes",
     "clickToVote": "Cliquez pour voter"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "message": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "goBack": "Retour",
+    "goHome": "Retour à l'accueil"
   }
 }

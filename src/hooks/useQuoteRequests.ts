@@ -22,6 +22,7 @@ export function useCreateQuoteRequest() {
 
   return useMutation({
     mutationFn: async (payload: QuoteRequestPayload) => {
+      if (!supabase) throw new Error('Supabase not configured');
       // 1. Save trip to trips table
       const { data, error } = await supabase
         .from('trips')

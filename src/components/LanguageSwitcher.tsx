@@ -4,6 +4,13 @@ import { activeNiche } from '../config/niche';
 const languageLabels: Record<string, string> = {
   en: 'EN',
   fr: 'FR',
+  es: 'ES',
+};
+
+const languageNames: Record<string, string> = {
+  en: 'English',
+  fr: 'French',
+  es: 'Spanish',
 };
 
 export function LanguageSwitcher() {
@@ -18,7 +25,7 @@ export function LanguageSwitcher() {
         <button
           key={lang}
           onClick={() => i18n.changeLanguage(lang)}
-          aria-label={`Switch to ${lang === 'en' ? 'English' : 'French'}`}
+          aria-label={`Switch to ${languageNames[lang] ?? lang}`}
           aria-pressed={i18n.language === lang}
           className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-all ${
             i18n.language === lang

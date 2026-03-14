@@ -21,6 +21,7 @@ export function ReviewBook({ onBack }: ReviewBookProps) {
   const { selectedDestination, startDate, endDate, travelers, budget, currency, selectedActivities, selectedAccommodation, selectedTransport, getTotalCost, clearTripData } = useTripStore();
   const createQuoteRequest = useCreateQuoteRequest();
   const [form, setForm] = useState<QuoteRequestFormValues>(defaultForm);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [quoteReference, setQuoteReference] = useState<string | null>(null);
   const nights = useMemo(() => startDate && endDate ? Math.max(Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)), 1) : 0, [endDate, startDate]);
   const totalCost = getTotalCost();
@@ -38,7 +39,9 @@ export function ReviewBook({ onBack }: ReviewBookProps) {
     if (!selectedTransport) messages.push(t('review.validationTransport'));
     if (!form.fullName.trim()) messages.push(t('review.validationName'));
     if (!form.email.trim()) messages.push(t('review.validationEmail'));
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) messages.push(t('review.validationEmailFormat'));
     if (!form.phone.trim()) messages.push(t('review.validationPhone'));
+    else if (!/^\+?[\d\s()-]{7,}$/.test(form.phone.trim())) messages.push(t('review.validationPhoneFormat'));
     return messages;
   }, [endDate, form.email, form.fullName, form.phone, selectedAccommodation, selectedActivities.length, selectedDestination, selectedTransport, startDate, t]);
 
@@ -228,17 +231,50 @@ export function ReviewBook({ onBack }: ReviewBookProps) {
 
           <div className="space-y-4">
             <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate-600">{t('review.fullName')}</span>
-              <input value={form.fullName} onChange={(e) => setForm((prev) => ({ ...prev, fullName: e.target.value }))} className={`w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput}`} />
+              <span className="text-xs font-medium text-slate-600">{t('review.fullName')} <span className="text-red-400">*</span></span>
+              <input
+                value={form.fullName}
+                onChange={(e) => setForm((prev) => ({ ...prev, fullName: e.target.value }))}
+                onBlur={() => setTouched((p) => ({ ...p, fullName: true }))}
+                className={`w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput} ${touched.fullName && !form.fullName.trim() ? 'border-red-300 bg-red-50/50' : 'border-slate-200'}`}
+              />
+              {touched.fullName && !form.fullName.trim() && (
+                <span className="text-xs text-red-500">{t('review.validationName')}</span>
+              )}
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block space-y-1">
-                <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600"><Mail size={12} /> {t('review.email')}</span>
-                <input type="email" value={form.email} onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))} className={`w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput}`} />
+                <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600"><Mail size={12} /> {t('review.email')} <span className="text-red-400">*</span></span>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+                  onBlur={() => setTouched((p) => ({ ...p, email: true }))}
+                  className={`w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput} ${touched.email && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) ? 'border-red-300 bg-red-50/50' : 'border-slate-200'}`}
+                />
+                {touched.email && !form.email.trim() && (
+                  <span className="text-xs text-red-500">{t('review.validationEmail')}</span>
+                )}
+                {touched.email && form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()) && (
+                  <span className="text-xs text-red-500">{t('review.validationEmailFormat')}</span>
+                )}
               </label>
               <label className="block space-y-1">
-                <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600"><Phone size={12} /> {t('review.phone')}</span>
-                <input value={form.phone} onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))} className={`w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput}`} />
+                <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600"><Phone size={12} /> {t('review.phone')} <span className="text-red-400">*</span></span>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
+                  onBlur={() => setTouched((p) => ({ ...p, phone: true }))}
+                  className={`w-full rounded-xl border px-3 py-2.5 text-sm focus:outline-none ${tc.focusInput} ${touched.phone && (!/^\+?[\d\s()-]{7,}$/.test(form.phone.trim())) ? 'border-red-300 bg-red-50/50' : 'border-slate-200'}`}
+                  placeholder="+33 6 12 34 56 78"
+                />
+                {touched.phone && !form.phone.trim() && (
+                  <span className="text-xs text-red-500">{t('review.validationPhone')}</span>
+                )}
+                {touched.phone && form.phone.trim() && !/^\+?[\d\s()-]{7,}$/.test(form.phone.trim()) && (
+                  <span className="text-xs text-red-500">{t('review.validationPhoneFormat')}</span>
+                )}
               </label>
             </div>
             <label className="block space-y-1">

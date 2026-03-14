@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "QTRIP",
-    "tagline": "Plan the ultimate celebration"
+    "tagline": "Plan the ultimate cruise tour"
   },
   "nav": {
     "preferences": "Preferences",
@@ -107,7 +107,9 @@
     "sectionTitle": "Curated experiences",
     "whatToInclude": "What should we include in {{destination}}?",
     "chooseSub": "Choose the activities that feel essential. We'll use them to build your day-by-day proposal and final quote.",
-    "continueToTransport": "Continue to transport"
+    "continueToTransport": "Continue to transport",
+    "noActivities": "No activities available yet",
+    "noActivitiesSub": "Activities for this destination are being curated. Check back soon or try another destination."
   },
   "transport": {
     "title": "Getting around",
@@ -217,7 +219,9 @@
     "validationEmail": "Email is required.",
     "validationPhone": "Phone number is required.",
     "validationIncomplete": "Please complete the missing items before submitting:",
-    "createAccount": "Create an account"
+    "createAccount": "Create an account",
+    "validationEmailFormat": "Please enter a valid email address.",
+    "validationPhoneFormat": "Please enter a valid phone number."
   },
   "profile": {
     "title": "Your profile",
@@ -238,7 +242,8 @@
     "notifBookings": "Booking confirmations",
     "notifBookingsDesc": "When your trip is confirmed",
     "notifGroup": "Group activity",
-    "notifGroupDesc": "When someone joins or RSVPs"
+    "notifGroupDesc": "When someone joins or RSVPs",
+    "profileUpdated": "Profile updated successfully."
   },
   "group": {
     "title": "Your group",
@@ -374,5 +379,11 @@
     "title": "Dress code vote",
     "votes": "votes",
     "clickToVote": "Click to cast your vote"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you're looking for doesn't exist or has been moved.",
+    "goBack": "Go back",
+    "goHome": "Back to home"
   }
 }

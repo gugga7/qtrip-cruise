@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
   Bell,
   Calendar,
@@ -52,16 +53,35 @@ function EditProfileModal({
   open,
   onClose,
   user,
+  onSaved,
 }: {
   open: boolean;
   onClose: () => void;
   user: User;
+  onSaved: () => void;
 }) {
   const { t } = useTranslation();
   const [displayName, setDisplayName] = useState(
     user?.user_metadata?.full_name || user?.user_metadata?.display_name || ''
   );
   const [phone, setPhone] = useState(user?.user_metadata?.phone || '');
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    if (!displayName.trim()) return;
+    setSaving(true);
+    const { error } = await supabase.auth.updateUser({
+      data: { full_name: displayName.trim(), phone: phone.trim() },
+    });
+    setSaving(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(t('profile.profileUpdated'));
+      onSaved();
+      onClose();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -122,10 +142,11 @@ function EditProfileModal({
                 {t('common.cancel')}
               </button>
               <button
-                onClick={onClose}
-                className={`flex-1 rounded-xl ${tc.btnGradient} px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md`}
+                onClick={handleSave}
+                disabled={saving || !displayName.trim()}
+                className={`flex-1 rounded-xl ${tc.btnGradient} px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60`}
               >
-                {t('common.save')}
+                {saving ? t('common.saving') : t('common.save')}
               </button>
             </div>
           </motion.div>
@@ -462,7 +483,7 @@ export function Profile() {
         {t('nav.signOut')}
       </button>
 
-      <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} user={user} />
+      <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} user={user} onSaved={() => window.location.reload()} />
     </div>
   );
 }
