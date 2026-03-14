@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "QTRIP",
-    "tagline": "Plan the ultimate cruise tour"
+    "tagline": "Make every port count"
   },
   "nav": {
     "preferences": "Preferences",
@@ -49,10 +49,10 @@
     "minutes": "minutes"
   },
   "preferences": {
-    "title": "Plan your celebration",
-    "subtitle": "Choose your destination, dates, and group size to get started.",
+    "title": "Plan your port adventures",
+    "subtitle": "Choose your ports, dates, and group size to get started.",
     "destination": "Destination",
-    "selectDestination": "Where are you celebrating?",
+    "selectDestination": "Which port are you visiting?",
     "dates": "Dates",
     "startDate": "Start date",
     "endDate": "End date",
@@ -61,21 +61,21 @@
     "budgetTotal": "Total budget",
     "budgetPerPerson": "Per person",
     "currency": "Currency",
-    "heroTitle": "Build a polished trip request in minutes.",
-    "heroSubtitle": "Pick your destination, dates, and budget. We'll tailor activities, transport, accommodation, and your final quote.",
-    "fastQuote": "Fast quote turnaround",
-    "curatedStays": "Curated stays and experiences",
+    "heroTitle": "Build your shore itinerary in minutes.",
+    "heroSubtitle": "Pick your ports, set your timing, and budget. We'll curate activities that fit your ship's schedule.",
+    "fastQuote": "Fast shore quote",
+    "curatedStays": "Vetted local operators",
     "noPayment": "No payment required yet",
     "selectedDestination": "Selected destination",
-    "noDestination": "No destination selected yet",
-    "chooseBelow": "Choose one of the destinations below.",
-    "chooseDestination": "Choose your destination",
-    "chooseDestinationSub": "Select where you'd like to go. We'll tailor the rest of your trip around it.",
+    "noDestination": "No port selected yet",
+    "chooseBelow": "Choose one of the ports below.",
+    "chooseDestination": "Choose your port",
+    "chooseDestinationSub": "Select the port you'd like to explore. We'll tailor shore excursions around it.",
     "travelDates": "Travel dates",
     "start": "Start",
     "end": "End",
     "budgetHint": "A planning signal, not a hard cap.",
-    "destinationInsights": "Destination insights",
+    "destinationInsights": "Port insights",
     "bestTime": "Best time",
     "languageLabel": "Language",
     "requirements": "Requirements",
@@ -85,8 +85,8 @@
     "validationDatesOrder": "Your end date must be after your start date."
   },
   "activities": {
-    "title": "Choose your experiences",
-    "subtitle": "Select the activities for your group. Mix and match across categories.",
+    "title": "Choose your shore experiences",
+    "subtitle": "Select the activities for your port day. Mix and match across categories.",
     "selected": "{{count}} selected",
     "duration": "{{hours}}h",
     "addToTrip": "Add to trip",
@@ -104,27 +104,27 @@
     "noDestination": "Select a destination first",
     "noDestinationSub": "We need a destination before we can suggest experiences.",
     "backToPrefs": "Back to preferences",
-    "sectionTitle": "Curated experiences",
+    "sectionTitle": "Curated shore experiences",
     "whatToInclude": "What should we include in {{destination}}?",
-    "chooseSub": "Choose the activities that feel essential. We'll use them to build your day-by-day proposal and final quote.",
+    "chooseSub": "Choose the activities that fit your shore time. We'll schedule them to get you back to the ship on time.",
     "continueToTransport": "Continue to transport",
     "noActivities": "No activities available yet",
     "noActivitiesSub": "Activities for this destination are being curated. Check back soon or try another destination."
   },
   "transport": {
-    "title": "Getting around",
-    "subtitle": "Choose how your group will travel.",
+    "title": "Getting from the dock",
+    "subtitle": "Choose how your group will get around the port city.",
     "validationMin": "Choose one transport option to keep the quote coherent.",
     "noDestination": "Select a destination first",
     "noDestinationSub": "Transport suggestions are destination-specific.",
     "backToPrefs": "Back to preferences",
-    "sectionTitle": "Arrival & getting around",
-    "chooseFor": "Choose the transport style for {{destination}}",
-    "chooseSub": "Pick one lead transport option. We'll confirm availability and logistics after you submit your quote.",
+    "sectionTitle": "Dock transfer & local transport",
+    "chooseFor": "Choose transport in {{destination}}",
+    "chooseSub": "Pick your dock-to-city transport. We'll confirm availability with local operators.",
     "continueToAccommodation": "Continue to accommodation"
   },
   "accommodation": {
-    "title": "Where to stay",
+    "title": "Where to freshen up",
     "subtitle": "Pick the perfect base for your group.",
     "validationMin": "Choose one accommodation option before continuing.",
     "noDestination": "Select a destination first",
@@ -136,8 +136,8 @@
     "continueToSchedule": "Continue to schedule"
   },
   "schedule": {
-    "title": "Your optimized schedule",
-    "subtitle": "Our AI arranges your activities for the best flow. Adjust anything that doesn't feel right.",
+    "title": "Your optimized shore schedule",
+    "subtitle": "Our AI arranges your port activities within your dock window. Adjust anything that doesn't feel right.",
     "itineraryBuilder": "Itinerary builder",
     "previewByDay": "Preview by day",
     "tripAtGlance": "Your trip at a glance.",
@@ -154,7 +154,7 @@
     "reSuggest": "Re-suggest",
     "suggestSuccess": "Schedule suggested — feel free to adjust anything.",
     "suggestError": "Couldn't auto-schedule — assign manually or",
-    "thinking": "Building your itinerary",
+    "thinking": "Building your shore itinerary",
     "continueToReview": "Continue to review",
     "assignAll": "Assign every selected activity to a day and time slot.",
     "noActivities": "No activities selected",
@@ -163,7 +163,7 @@
     "aiPrefix": "AI:"
   },
   "review": {
-    "title": "Review your trip",
+    "title": "Review your shore plan",
     "subtitle": "Check everything looks good before requesting a quote.",
     "requestQuote": "Request a quote",
     "quoteSubmitted": "Your quote request has been submitted!",
@@ -200,7 +200,7 @@
     "whatHappensNext": "What happens next",
     "nextStep1": "We review availability for your selections",
     "nextStep2": "We send you a final quote with confirmed prices",
-    "nextStep3": "You confirm and we lock in your celebration",
+    "nextStep3": "You confirm and we lock in your shore excursion",
     "buildAnother": "Build another quote",
     "goToProfile": "Go to profile",
     "quoteReceived": "Quote request received",
@@ -262,7 +262,7 @@
     "removeGuest": "Remove",
     "createGroup": "Create group",
     "createDescription": "Create a group to start planning together.",
-    "groupNamePlaceholder": "Group name (e.g. Sarah's Hen Do)"
+    "groupNamePlaceholder": "Group name (e.g. Barcelona Shore Crew)"
   },
   "booking": {
     "status": {
@@ -275,25 +275,25 @@
     }
   },
   "home": {
-    "welcome": "Welcome to QTRIP",
-    "subtitle": "Plan unforgettable group trips.",
+    "welcome": "Welcome to QTRIP Shore",
+    "subtitle": "Plan unforgettable port-day adventures.",
     "startPlanning": "Start planning",
-    "smartReco": "Curated experiences",
-    "smartRecoSub": "Hand-picked activities, venues, and stays tailored to your group.",
-    "easyPlanning": "AI-powered scheduling",
-    "easyPlanningSub": "Our AI builds the perfect day-by-day itinerary for your group.",
-    "completeSolution": "All-in-one quotes",
-    "completeSolutionSub": "Activities, accommodation, and transport — one quote, zero hassle.",
+    "smartReco": "Curated port excursions",
+    "smartRecoSub": "Walking tours, local food experiences, beach escapes, and hidden gems — all vetted by locals.",
+    "easyPlanning": "AI-powered port scheduling",
+    "easyPlanningSub": "Our AI builds the perfect port-day itinerary that respects your ship's schedule.",
+    "completeSolution": "All-in-one shore quotes",
+    "completeSolutionSub": "Activities, transport from dock, and local guides — one quote, no ship markup.",
     "howItWorks": "How it works",
-    "howItWorksSub": "From idea to confirmed trip in just a few minutes.",
+    "howItWorksSub": "From port selection to confirmed shore itinerary in just a few minutes.",
     "stepChoose": "Choose",
-    "stepChooseDesc": "Destination, dates, budget, and activities. Build your ideal trip.",
+    "stepChooseDesc": "Your ports, dock times, group size, and budget.",
     "stepPlan": "Plan",
-    "stepPlanDesc": "Our AI builds the perfect schedule. Adjust as you like.",
+    "stepPlanDesc": "Our AI builds the perfect port-day schedule — respecting your ship's reboard time.",
     "stepBook": "Book",
-    "stepBookDesc": "Submit your quote request. We confirm availability and book it all.",
-    "readyTitle": "Ready to plan the celebration?",
-    "readySubtitle": "No payment required. Get a personalized quote within hours.",
+    "stepBookDesc": "Submit your quote request. We confirm availability with local operators.",
+    "readyTitle": "Ready to explore every port?",
+    "readySubtitle": "No payment required. Get a personalized shore excursion quote within hours.",
     "allRights": "All rights reserved.",
     "terms": "Terms",
     "privacy": "Privacy",
@@ -334,8 +334,8 @@
     "stepOf": "Step {{current}} of {{total}}"
   },
   "joinGroup": {
-    "title": "Join the celebration",
-    "subtitle": "You've been invited to join a trip group!",
+    "title": "Join the shore crew",
+    "subtitle": "You've been invited to join a port excursion group!",
     "enterCode": "Enter invite code",
     "joinButton": "Join group",
     "invalidCode": "Invalid invite code",
@@ -355,7 +355,7 @@
     "bookingRef": "Booking reference",
     "acceptQuote": "Accept quote",
     "declineQuote": "Decline quote",
-    "countdownTitle": "Countdown to the celebration"
+    "countdownTitle": "Countdown to next port"
   },
   "countdown": {
     "celebration": "It's time to celebrate!",

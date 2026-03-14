@@ -11,7 +11,7 @@ interface SEOProps {
   noIndex?: boolean;
 }
 
-const BASE_URL = 'https://qtrip.app';
+const BASE_URL = 'https://shore.qtrip.app';
 
 export const SEO: React.FC<SEOProps> = ({
   title,

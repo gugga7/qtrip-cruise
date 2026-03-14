@@ -10,10 +10,10 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'QTRIP',
-        short_name: 'QTRIP',
-        description: 'Plan unforgettable bachelor & bachelorette trips',
-        theme_color: '#ec4899',
+        name: 'QTRIP Shore',
+        short_name: 'Shore',
+        description: 'Plan unforgettable cruise port adventures — skip overpriced ship excursions',
+        theme_color: '#0ea5e9',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
@@ -36,7 +36,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB — safelist inflates CSS
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
@@ -59,14 +59,13 @@ export default defineConfig({
     include: ['react-map-gl', 'mapbox-gl'],
   },
   define: {
-    // Ensure env variables are properly stringified
     __VITE_OPENAI_API_KEY__: JSON.stringify(process.env.VITE_OPENAI_API_KEY),
     __VITE_MAPBOX_TOKEN__: JSON.stringify(process.env.VITE_MAPBOX_TOKEN),
     __VITE_OPENWEATHER_API_KEY__: JSON.stringify(process.env.VITE_OPENWEATHER_API_KEY),
     __VITE_AVIATION_API_KEY__: JSON.stringify(process.env.VITE_AVIATION_API_KEY),
   },
   server: {
-    port: 5197,
+    port: 5199,
     strictPort: true,
     watch: {
       usePolling: true,

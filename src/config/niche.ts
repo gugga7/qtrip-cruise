@@ -73,63 +73,64 @@ export interface NicheConfig {
   defaultGroupSize: number;
 }
 
-/* ── Bachelor / Bachelorette niche ── */
+/* ── Cruise Onshore Tours niche ── */
 
-export const bachelorConfig: NicheConfig = {
-  id: 'bachelor',
+export const cruiseConfig: NicheConfig = {
+  id: 'cruise',
   name: {
-    en: 'Bachelor & Bachelorette',
-    fr: 'Enterrement de Vie de Garçon/Fille',
+    en: 'Cruise Onshore Tours',
+    fr: 'Excursions à Terre',
+    es: 'Excursiones en Puerto',
   },
-  destinations: ['marrakech', 'marbella', 'faro'],
+  destinations: ['barcelona', 'dubrovnik', 'santorini', 'naples', 'nassau', 'cozumel'],
   features: {
     groupBooking: true,
     votingSystem: true,
     countdownTimer: true,
     expenseSplitting: true,
-    guestList: true,
+    guestList: false,
     profilePage: true,
     aiSchedule: true,
   },
   theme: {
-    primary: 'pink',
-    accent: 'rose',
-    heroGradient: 'from-pink-500 via-rose-500 to-fuchsia-500',
-    ctaGradient: 'from-pink-500 to-rose-500',
-    appName: 'QTRIP',
+    primary: 'sky',
+    accent: 'blue',
+    heroGradient: 'from-sky-500 via-blue-500 to-indigo-600',
+    ctaGradient: 'from-sky-500 to-blue-600',
+    appName: 'QTRIP Shore',
     tagline: {
-      en: 'Plan the ultimate cruise tour',
-      fr: 'Organisez la fête parfaite',
+      en: 'Make every port count',
+      fr: 'Maximisez chaque escale',
+      es: 'Aprovecha cada puerto',
     },
     description: {
-      en: 'Plan unforgettable bachelor & bachelorette trips to Marrakech, Marbella, and the Algarve.',
-      fr: 'Organisez des enterrements de vie de garçon et de jeune fille inoubliables à Marrakech, Marbella et en Algarve.',
+      en: 'Skip overpriced ship excursions. Plan your own port-day adventures with curated activities, local guides, and tight timing.',
+      fr: 'Oubliez les excursions hors de prix du bateau. Planifiez vos propres aventures portuaires avec des activités sélectionnées et un timing parfait.',
+      es: 'Olvídate de las excursiones caras del barco. Planifica tus propias aventuras en puerto con actividades seleccionadas y horarios precisos.',
     },
   },
   categories: [
-    'Party & Nightlife',
-    'Adventure & Outdoor',
-    'Wellness & Relaxation',
-    'Food & Drink',
-    'Culture & Sightseeing',
-    'Group Experiences',
+    'Must-See Landmarks',
+    'Food & Local Flavour',
+    'Beach & Water',
+    'Adventure & Active',
+    'Shopping & Markets',
+    'Cultural Deep Dive',
   ],
   categoryColors: {
-    'Party & Nightlife':     { bg: 'bg-fuchsia-50',  border: 'border-fuchsia-300', text: 'text-fuchsia-700', badge: 'bg-fuchsia-100 text-fuchsia-700', dot: 'bg-fuchsia-400', light: 'bg-fuchsia-50/60' },
-    'Adventure & Outdoor':   { bg: 'bg-orange-50',   border: 'border-orange-300',  text: 'text-orange-700',  badge: 'bg-orange-100 text-orange-700',   dot: 'bg-orange-400',  light: 'bg-orange-50/60' },
-    'Wellness & Relaxation': { bg: 'bg-teal-50',     border: 'border-teal-300',    text: 'text-teal-700',    badge: 'bg-teal-100 text-teal-700',       dot: 'bg-teal-400',    light: 'bg-teal-50/60' },
-    'Food & Drink':          { bg: 'bg-rose-50',     border: 'border-rose-300',    text: 'text-rose-700',    badge: 'bg-rose-100 text-rose-700',       dot: 'bg-rose-400',    light: 'bg-rose-50/60' },
-    'Culture & Sightseeing': { bg: 'bg-amber-50',    border: 'border-amber-300',   text: 'text-amber-700',   badge: 'bg-amber-100 text-amber-700',     dot: 'bg-amber-400',   light: 'bg-amber-50/60' },
-    'Group Experiences':     { bg: 'bg-violet-50',   border: 'border-violet-300',  text: 'text-violet-700',  badge: 'bg-violet-100 text-violet-700',   dot: 'bg-violet-400',  light: 'bg-violet-50/60' },
+    'Must-See Landmarks':   { bg: 'bg-sky-50',     border: 'border-sky-300',    text: 'text-sky-700',    badge: 'bg-sky-100 text-sky-700',       dot: 'bg-sky-400',    light: 'bg-sky-50/60' },
+    'Food & Local Flavour': { bg: 'bg-amber-50',   border: 'border-amber-300',  text: 'text-amber-700',  badge: 'bg-amber-100 text-amber-700',   dot: 'bg-amber-400',  light: 'bg-amber-50/60' },
+    'Beach & Water':        { bg: 'bg-cyan-50',    border: 'border-cyan-300',   text: 'text-cyan-700',   badge: 'bg-cyan-100 text-cyan-700',     dot: 'bg-cyan-400',   light: 'bg-cyan-50/60' },
+    'Adventure & Active':   { bg: 'bg-orange-50',  border: 'border-orange-300', text: 'text-orange-700', badge: 'bg-orange-100 text-orange-700',  dot: 'bg-orange-400', light: 'bg-orange-50/60' },
+    'Shopping & Markets':   { bg: 'bg-rose-50',    border: 'border-rose-300',   text: 'text-rose-700',   badge: 'bg-rose-100 text-rose-700',     dot: 'bg-rose-400',   light: 'bg-rose-50/60' },
+    'Cultural Deep Dive':   { bg: 'bg-indigo-50',  border: 'border-indigo-300', text: 'text-indigo-700', badge: 'bg-indigo-100 text-indigo-700',  dot: 'bg-indigo-400', light: 'bg-indigo-50/60' },
   },
   defaultCurrency: 'EUR',
-  supportedLanguages: ['en', 'fr'],
+  supportedLanguages: ['en', 'fr', 'es'],
   defaultLanguage: 'en',
-  minGroupSize: 4,
-  defaultGroupSize: 8,
+  minGroupSize: 2,
+  defaultGroupSize: 4,
 };
 
 /* ── Active niche ── */
-// Change this to switch niches. In the future this could come from
-// an env variable, subdomain detection, or a database lookup.
-export const activeNiche: NicheConfig = bachelorConfig;
+export const activeNiche: NicheConfig = cruiseConfig;
