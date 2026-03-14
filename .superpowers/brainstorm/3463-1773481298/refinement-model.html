@@ -1,0 +1,64 @@
+<h2>How does the user refine the AI plan?</h2>
+<p class="subtitle">The AI suggests a full shore plan — then the user makes it theirs</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Card Swap: Tap to replace</h3>
+      <p>Each activity in the plan is a card. Tap "Swap" to see 2-3 alternatives for that slot (same time, same vibe, similar price). Pick one or keep the original.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-body" style="padding:16px;background:#f8fafc;">
+          <div style="display:flex;gap:12px;align-items:stretch;">
+            <div style="flex:1;background:white;border-radius:12px;padding:12px;border:2px solid #0ea5e9;position:relative;">
+              <div style="font-size:11px;color:#0ea5e9;font-weight:700;">☀️ MORNING 8:00–11:00</div>
+              <div style="font-weight:600;margin-top:4px;">Gothic Quarter Walk</div>
+              <div style="font-size:12px;color:#64748b;">3h · €35/person</div>
+              <button style="margin-top:8px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:4px 12px;font-size:12px;cursor:pointer;">🔄 Swap</button>
+            </div>
+            <div style="flex:1;background:white;border-radius:12px;padding:12px;border:1px solid #e2e8f0;">
+              <div style="font-size:11px;color:#f59e0b;font-weight:700;">🌤️ AFTERNOON 11:30–15:00</div>
+              <div style="font-weight:600;margin-top:4px;">La Boqueria Food Tour</div>
+              <div style="font-size:12px;color:#64748b;">3.5h · €55/person</div>
+              <button style="margin-top:8px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:4px 12px;font-size:12px;cursor:pointer;">🔄 Swap</button>
+            </div>
+          </div>
+          <div style="margin-top:8px;text-align:center;font-size:11px;color:#94a3b8;">⚓ All aboard by 16:30 · Total: €90/person</div>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:0.85em;color:#64748b;">Simple, fast, visual. Works great on mobile. Limited to pre-curated alternatives.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Chat Refinement: Talk to the concierge</h3>
+      <p>Below the generated plan, a chat input lets the user ask for changes in natural language:</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-body" style="padding:16px;background:#f8fafc;">
+          <div style="background:white;border-radius:12px;padding:12px;border:1px solid #e2e8f0;margin-bottom:8px;">
+            <div style="font-size:12px;color:#64748b;">Your Barcelona Plan (8am–5pm)</div>
+            <div style="font-size:13px;margin-top:4px;">☀️ Gothic Quarter Walk · 🌤️ La Boqueria Food Tour</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input style="flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:13px;" placeholder="e.g. 'Replace the walk with something at the beach'" />
+            <button style="background:#0ea5e9;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;">Send</button>
+          </div>
+          <div style="margin-top:6px;font-size:11px;color:#94a3b8;">Try: "Add something for the kids" · "Make it more relaxed" · "I want to try paella"</div>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:0.85em;color:#64748b;">Maximum flexibility. Feels like talking to a travel agent. Requires real-time AI calls.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Both: Cards + Chat</h3>
+      <p>Show the plan as swappable cards (option A) with a chat bar at the bottom (option B). Quick swaps for simple changes, chat for complex requests.</p>
+      <p>The cards handle 80% of refinements (swap, remove, reorder). Chat handles the creative stuff ("I heard there's a great tapas place near the port" or "We have a wheelchair user").</p>
+      <p style="margin-top:8px;font-size:0.85em;color:#64748b;">Best UX but most engineering. Card swaps are instant (local), chat triggers AI re-generation.</p>
+    </div>
+  </div>
+</div>

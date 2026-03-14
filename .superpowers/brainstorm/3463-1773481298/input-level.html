@@ -1,0 +1,48 @@
+<h2>How much input before AI generates?</h2>
+<p class="subtitle">The concierge needs enough context to be useful — but less input = more magic</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Minimal: Just the cruise itinerary</h3>
+      <p>User enters: ports + dates + dock times + group size. That's it.</p>
+      <p>AI infers preferences from popular activities and generates a balanced plan. User refines after.</p>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">
+        <strong>Input:</strong> "Barcelona (8am-5pm), Dubrovnik (7am-2pm), 4 people"<br>
+        <strong>AI output:</strong> Full plan with activities, timing, costs
+      </p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Light Preferences: Itinerary + vibe/budget</h3>
+      <p>User enters: ports + dock times + group size + <strong>budget per port</strong> + <strong>activity vibe</strong> (e.g., "cultural", "adventure", "foodie", "relaxed").</p>
+      <p>AI uses the vibe + budget to pick the right mix. More relevant first suggestions, less refinement needed.</p>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">
+        <strong>Input:</strong> "Barcelona (8am-5pm), 4 people, €200 budget, 'foodie + culture'"<br>
+        <strong>AI output:</strong> Morning: Gothic Quarter walking tour, Afternoon: La Boqueria food tour
+      </p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Smart Onboarding: Quick quiz then AI</h3>
+      <p>3-4 quick visual questions before generating:</p>
+      <ul style="margin:8px 0;font-size:0.9em;">
+        <li>🎯 What matters most? (culture / food / adventure / relaxation / shopping)</li>
+        <li>🏃 Activity level? (easy stroll / moderate / active explorer)</li>
+        <li>💰 Budget per port? (slider: budget / mid-range / premium)</li>
+        <li>👥 Group type? (couple / family / friends / solo)</li>
+      </ul>
+      <p>Feels like a personal concierge learning about you. AI generates a highly tailored plan.</p>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">
+        <strong>Result:</strong> "Based on your love of food and moderate activity level, here's your Barcelona day..."
+      </p>
+    </div>
+  </div>
+</div>

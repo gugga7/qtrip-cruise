@@ -1,0 +1,40 @@
+<h2>How many pages in the booking flow?</h2>
+<p class="subtitle">AI generates the plan — so how few screens can we get away with?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>3 Pages: Input → Plan → Book</h3>
+      <p><strong>Page 1 — "Tell us your cruise":</strong> Ports + dock times + travelers + budget + vibe preferences. One form, one page.</p>
+      <p><strong>Page 2 — "Your Shore Plan":</strong> AI-generated plan with port tabs, activity cards, swap buttons. This IS the schedule — no separate Activities or Schedule step. User refines until happy.</p>
+      <p><strong>Page 3 — "Book It":</strong> Cost summary + contact info + submit quote.</p>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">Minimum friction. Each page has a clear purpose. The AI does the heavy lifting on page 2.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>2 Pages: Smart Form → Plan+Book</h3>
+      <p><strong>Page 1 — "Your Cruise":</strong> Same input form (ports, travelers, budget, vibe).</p>
+      <p><strong>Page 2 — "Your Shore Plan":</strong> AI plan with port tabs AND the booking form at the bottom. Review + book on the same page. No third click.</p>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">Ultra-minimal. Risk: page 2 might feel long/overwhelming with plan + form together.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Single Page: Everything on one scroll</h3>
+      <p>One long page with sections that reveal progressively:</p>
+      <ol style="font-size:0.9em;margin:8px 0;">
+        <li>Enter cruise details (top)</li>
+        <li>Click "Generate Plan" → AI section appears below</li>
+        <li>Refine activities → cost updates live</li>
+        <li>Contact form appears at bottom → submit</li>
+      </ol>
+      <p style="color:#64748b;font-size:0.85em;margin-top:8px;">No page transitions at all. Risk: very long page, hard to track progress.</p>
+    </div>
+  </div>
+</div>

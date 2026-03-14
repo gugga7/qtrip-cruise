@@ -1,0 +1,43 @@
+<h2>Shore Excursion Booking Flow</h2>
+<p class="subtitle">Which booking journey model fits cruise passengers best?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Streamlined 4-Step Wizard</h3>
+      <p><strong>Ports → Activities → Schedule → Review</strong></p>
+      <p>Remove Transport &amp; Accommodation steps entirely. Keep the linear wizard but make it cruise-focused. User adds ports with dock times, picks activities, AI schedules within dock windows, then submits quote.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Familiar wizard pattern</li><li>Minimal code changes (just skip 2 steps)</li><li>Clear progression</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Activities still scoped to one destination</li><li>Must complete all steps linearly</li><li>Scheduling feels separate from browsing</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Port-First Explorer</h3>
+      <p><strong>Itinerary → Per-Port Activity Browsing → AI Auto-Schedule → Review</strong></p>
+      <p>After entering ports, the user explores activities <em>per port</em> (tab/accordion for each port). AI auto-schedules as activities are added (no separate Schedule step). Review shows the full multi-port plan.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Activities tied to specific ports (natural for cruise)</li><li>No separate scheduling step — AI works in background</li><li>Feels like building a trip, not filling a form</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Bigger UI refactor (merge Activities + Schedule)</li><li>Per-port tabs add complexity</li><li>Need activity catalog per destination</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>AI-First Concierge</h3>
+      <p><strong>Tell us your cruise → AI suggests everything → Refine → Book</strong></p>
+      <p>User enters cruise details (ship, ports, dates). AI generates a complete shore plan with recommended activities per port, pre-scheduled within dock windows. User reviews, swaps activities, adjusts, then submits.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Minimum effort for user — just approve/tweak</li><li>Feels like a personal concierge</li><li>Strong differentiator vs competitors</li><li>Works great for first-time cruisers</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Requires rich activity catalog per port</li><li>AI must know activity quality/ratings</li><li>Less control for detail-oriented users</li><li>Biggest engineering effort</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
