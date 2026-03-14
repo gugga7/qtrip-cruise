@@ -119,8 +119,8 @@ function buildUserMessage(req: ScheduleRequest): string {
   lines.push(
     `Local tips: ${req.destination.localTips.join("; ")}`,
     "",
-    "Activities to schedule:",
-  ];
+    "Activities to schedule:"
+  );
 
   for (const a of req.activities) {
     lines.push(
@@ -238,11 +238,12 @@ serve(async (req) => {
       throw new Error("KIMI_API_KEY not configured");
     }
 
-    const body: ScheduleRequest = await req.json();
+    const rawBody = await req.json();
+    console.log('[ai-schedule] mode:', (rawBody as any).mode, 'keys:', Object.keys(rawBody));
 
     // Plan mode: select AND schedule activities
-    if ((body as any).mode === 'plan') {
-      const planBody = body as any;
+    if ((rawBody as any).mode === 'plan') {
+      const planBody = rawBody as any;
       const planPrompt = buildPlanSystemPrompt(planBody.vibes || [], planBody.totalBudget || 0, planBody.travelers || 2);
       const planUserMsg = buildPlanUserMessage(planBody.ports || []);
 
@@ -274,6 +275,8 @@ serve(async (req) => {
       });
     }
 
+    // Schedule mode (original flow)
+    const body = rawBody as ScheduleRequest;
     const activityIds = body.activities.map((a) => a.id);
 
     const response = await fetch(`${KIMI_BASE_URL}/chat/completions`, {
