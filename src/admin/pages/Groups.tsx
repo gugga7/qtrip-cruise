@@ -89,18 +89,18 @@ function GroupCard({ group }: { group: TripGroup }) {
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between p-5 text-left"
       >
-        <div className="flex items-center gap-4">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-sm font-bold ${tc.textPrimary}`}>
+        <div className="flex min-w-0 items-center gap-4">
+          <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-sm font-bold ${tc.textPrimary}`}>
             <Users size={18} />
           </div>
-          <div>
-            <p className="font-semibold text-slate-900">{group.name}</p>
-            <p className="text-sm text-slate-500">
+          <div className="min-w-0">
+            <p className="truncate font-semibold text-slate-900">{group.name}</p>
+            <p className="truncate text-sm text-slate-500">
               {formatDates(group.start_date, group.end_date)} — {members.length} {members.length === 1 ? 'member' : 'members'}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-shrink-0 items-center gap-3">
           {/* RSVP mini-breakdown */}
           <div className="hidden items-center gap-1.5 sm:flex">
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
@@ -182,7 +182,7 @@ function GroupCard({ group }: { group: TripGroup }) {
           {/* Members table */}
           {members.length > 0 ? (
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[600px] text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-left">
                     <th className="pb-2 pr-4 text-xs font-medium uppercase tracking-wider text-slate-400">Name</th>

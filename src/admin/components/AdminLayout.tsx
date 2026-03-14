@@ -20,7 +20,7 @@ export function AdminLayout() {
         )}
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white transition-transform md:relative md:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 w-64 flex-shrink-0 transform bg-white transition-transform md:relative md:translate-x-0 ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } md:block`}
         >

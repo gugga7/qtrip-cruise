@@ -189,21 +189,21 @@ export function Dashboard() {
                   const badge = statusBadge[trip.status] || statusBadge.draft;
                   return (
                     <div key={trip.id} className="flex items-center justify-between py-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`flex h-9 w-9 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-xs font-bold ${tc.textPrimary}`}>
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-xs font-bold ${tc.textPrimary}`}>
                           {(trip.full_name || '?')
                             .split(' ')
                             .map((n) => n[0])
                             .join('')}
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-900">{trip.full_name || 'Unknown'}</p>
-                          <p className="text-xs text-slate-500">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-slate-900">{trip.full_name || 'Unknown'}</p>
+                          <p className="truncate text-xs text-slate-500">
                             {trip.destination_name || 'No destination'} — {trip.travelers || 0} travelers
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-shrink-0 items-center gap-3">
                         <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${badge.bg} ${badge.text}`}>
                           {badge.label}
                         </span>

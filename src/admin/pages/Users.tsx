@@ -113,7 +113,8 @@ export function Users() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <table className="min-w-full divide-y divide-slate-200">
+          <div className="overflow-x-auto">
+          <table className="min-w-[600px] divide-y divide-slate-200">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
@@ -178,6 +179,7 @@ export function Users() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

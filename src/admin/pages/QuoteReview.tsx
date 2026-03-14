@@ -85,22 +85,22 @@ function QuoteCard({
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center justify-between p-5 text-left"
       >
-        <div className="flex items-center gap-4">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-sm font-bold ${tc.textPrimary}`}>
+        <div className="flex min-w-0 items-center gap-4">
+          <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${tc.bgPrimaryMuted} text-sm font-bold ${tc.textPrimary}`}>
             {(request.full_name || '?')
               .split(' ')
               .map((n) => n[0])
               .join('')}
           </div>
-          <div>
-            <p className="font-semibold text-slate-900">{request.full_name || 'Unknown'}</p>
-            <p className="text-sm text-slate-500">
+          <div className="min-w-0">
+            <p className="truncate font-semibold text-slate-900">{request.full_name || 'Unknown'}</p>
+            <p className="truncate text-sm text-slate-500">
               {request.destination_name || 'No destination'} — {request.travelers || 0} travelers —{' '}
               {formatDates(request.start_date, request.end_date)}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-shrink-0 items-center gap-3">
           <span className={`rounded-full px-3 py-1 text-xs font-semibold ${badge.bg} ${badge.text}`}>
             {badge.label}
           </span>
@@ -415,7 +415,7 @@ export function QuoteReview() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {filterTabs.map((f) => (
           <button
             key={f}
