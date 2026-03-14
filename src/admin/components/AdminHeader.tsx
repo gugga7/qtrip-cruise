@@ -1,15 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../lib/auth';
+import { supabase } from '../../lib/supabase';
 
 export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const userEmail = user?.email ?? '';
   const userInitial = userEmail ? userEmail[0].toUpperCase() : '?';
+
+  // Fetch pending quotes count
+  useEffect(() => {
+    async function fetchPendingCount() {
+      const { count } = await supabase
+        .from('trips')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'submitted');
+      setPendingCount(count ?? 0);
+    }
+    fetchPendingCount();
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -58,11 +72,12 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Decorative notification bell */}
+            {/* Notification bell — navigates to quotes */}
             <button
               type="button"
-              className="p-1 rounded-full text-gray-400 hover:text-gray-500"
-              aria-label="Notifications"
+              className="relative p-1 rounded-full text-gray-400 hover:text-gray-500"
+              aria-label="Pending quotes"
+              onClick={() => navigate('/admin/quotes')}
             >
               <svg
                 className="h-6 w-6"
@@ -77,6 +92,11 @@ export function AdminHeader({ onMenuToggle }: { onMenuToggle?: () => void }) {
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                 />
               </svg>
+              {pendingCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {pendingCount}
+                </span>
+              )}
             </button>
 
             {/* User menu */}

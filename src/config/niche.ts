@@ -98,7 +98,7 @@ export const bachelorConfig: NicheConfig = {
     ctaGradient: 'from-pink-500 to-rose-500',
     appName: 'QTRIP',
     tagline: {
-      en: 'Plan the ultimate celebration',
+      en: 'Plan the ultimate cruise tour',
       fr: 'Organisez la fête parfaite',
     },
     description: {

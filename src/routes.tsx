@@ -28,6 +28,8 @@ const Cities = React.lazy(() => import('./admin/pages/Cities').then(m => ({ defa
 const Products = React.lazy(() => import('./admin/pages/Products').then(m => ({ default: m.Products })));
 const AIConfig = React.lazy(() => import('./admin/pages/AIConfig').then(m => ({ default: m.AIConfig })));
 const QuoteReview = React.lazy(() => import('./admin/pages/QuoteReview').then(m => ({ default: m.QuoteReview })));
+const Users = React.lazy(() => import('./admin/pages/Users').then(m => ({ default: m.Users })));
+const Groups = React.lazy(() => import('./admin/pages/Groups').then(m => ({ default: m.Groups })));
 const AdminLayout = React.lazy(() => import('./admin/components/AdminLayout').then(m => ({ default: m.AdminLayout })));
 
 // Suspense wrapper for lazy-loaded routes
@@ -173,6 +175,16 @@ export const adminRoutes = [
         path: 'quotes',
         element: <Lazy><QuoteReview /></Lazy>,
         label: 'Quote Review'
+      },
+      {
+        path: 'users',
+        element: <Lazy><Users /></Lazy>,
+        label: 'Users'
+      },
+      {
+        path: 'groups',
+        element: <Lazy><Groups /></Lazy>,
+        label: 'Groups'
       }
     ]
   }

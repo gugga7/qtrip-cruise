@@ -92,7 +92,7 @@ export function useCreateQuoteRequest() {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            to: 'admin@qtrip.com',
+            to: import.meta.env.VITE_ADMIN_EMAIL || 'admin@qtrip.com',
             template: 'quote_received',
             locale: 'en',
             data: {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Clock, X, Eye, Send, ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
 import { tc } from '../../config/themeClasses';
 
@@ -56,7 +57,7 @@ function QuoteCard({
   onAction,
 }: {
   request: QuoteRequest;
-  onAction: (id: string, status: string, quoteAmount?: string) => void;
+  onAction: (id: string, status: string, quoteAmount?: string, adminNotes?: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [quoteAmount, setQuoteAmount] = useState((request.total_cost || 0).toString());
@@ -216,7 +217,7 @@ function QuoteCard({
               <div className="flex gap-2">
                 {request.status === 'submitted' && (
                   <button
-                    onClick={() => onAction(request.id, 'quoted', quoteAmount)}
+                    onClick={() => onAction(request.id, 'quoted', quoteAmount, adminNotes)}
                     className={`flex items-center gap-1.5 rounded-lg ${tc.bgPrimaryDark} px-4 py-2 text-sm font-medium text-white transition hover:bg-opacity-90`}
                   >
                     <Send size={14} /> Send quote
@@ -224,14 +225,14 @@ function QuoteCard({
                 )}
                 {request.status === 'quoted' && (
                   <button
-                    onClick={() => onAction(request.id, 'confirmed')}
+                    onClick={() => onAction(request.id, 'confirmed', undefined, adminNotes)}
                     className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
                   >
                     <Eye size={14} /> Confirm
                   </button>
                 )}
                 <button
-                  onClick={() => onAction(request.id, 'draft')}
+                  onClick={() => onAction(request.id, 'draft', undefined, adminNotes)}
                   className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
                 >
                   <X size={14} /> Decline
@@ -249,21 +250,34 @@ export function QuoteReview() {
   const [requests, setRequests] = useState<QuoteRequest[]>([]);
   const [filter, setFilter] = useState<FilterTab>('all');
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 25;
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data } = await supabase
+      const from = page * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      let query = supabase
         .from('trips')
-        .select('*')
+        .select('*', { count: 'exact' })
         .neq('status', 'draft')
         .order('created_at', { ascending: false });
 
+      if (filter !== 'all') {
+        query = query.eq('status', filter);
+      }
+
+      const { data, count } = await query.range(from, to);
+
       if (data) {
         setRequests(data as unknown as QuoteRequest[]);
+        setTotalCount(count ?? 0);
       }
     } catch (err) {
-      console.error('Failed to fetch quote requests:', err);
+      toast.error('Failed to fetch quote requests');
     } finally {
       setLoading(false);
     }
@@ -271,12 +285,15 @@ export function QuoteReview() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, filter]);
 
-  const handleAction = async (id: string, status: string, quoteAmount?: string) => {
+  const handleAction = async (id: string, status: string, quoteAmount?: string, adminNotes?: string) => {
     const updateData: Record<string, unknown> = { status };
     if (quoteAmount && status === 'quoted') {
       updateData.total_cost = Number(quoteAmount);
+    }
+    if (adminNotes) {
+      updateData.admin_notes = adminNotes;
     }
 
     const { error } = await supabase.from('trips').update(updateData).eq('id', id);
@@ -285,45 +302,87 @@ export function QuoteReview() {
       setRequests((prev) =>
         prev.map((r) =>
           r.id === id
-            ? { ...r, status, ...(quoteAmount && status === 'quoted' ? { total_cost: Number(quoteAmount) } : {}) }
+            ? { ...r, status, ...(quoteAmount && status === 'quoted' ? { total_cost: Number(quoteAmount) } : {}), ...(adminNotes ? { admin_notes: adminNotes } : {}) }
             : r,
         ),
       );
 
+      const trip = requests.find((r) => r.id === id);
+      const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const emailHeaders = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${anonKey}`,
+      };
+
       // Send email notification when quoting
-      if (status === 'quoted') {
-        const trip = requests.find((r) => r.id === id);
-        if (trip) {
-          const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
-          const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-          if (functionsUrl && anonKey) {
-            fetch(`${functionsUrl}/send-email`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${anonKey}`,
-              },
-              body: JSON.stringify({
-                to: trip.email,
-                template: 'quote_received',
-                locale: 'en',
-                data: {
-                  name: trip.full_name,
-                  destination: trip.destination_name,
-                  estimatedTotal: Number(quoteAmount),
-                  currency: trip.currency || 'EUR',
-                },
-              }),
-            }).catch(console.error);
-          }
-        }
+      if (status === 'quoted' && trip && functionsUrl && anonKey) {
+        fetch(`${functionsUrl}/send-email`, {
+          method: 'POST',
+          headers: emailHeaders,
+          body: JSON.stringify({
+            to: trip.email,
+            template: 'quote_received',
+            locale: 'en',
+            data: {
+              name: trip.full_name,
+              destination: trip.destination_name,
+              reference: trip.id,
+              dates: trip.start_date + ' – ' + trip.end_date,
+              estimatedTotal: Number(quoteAmount),
+              currency: trip.currency || 'EUR',
+            },
+          }),
+        }).catch((err) => toast.error(`Email send failed: ${err.message}`));
       }
+
+      // Send confirmation email
+      if (status === 'confirmed' && trip && functionsUrl && anonKey) {
+        fetch(`${functionsUrl}/send-email`, {
+          method: 'POST',
+          headers: emailHeaders,
+          body: JSON.stringify({
+            to: trip.email,
+            template: 'booking_confirmed',
+            locale: 'en',
+            data: {
+              name: trip.full_name,
+              destination: trip.destination_name,
+              reference: trip.id,
+              dates: trip.start_date + ' – ' + trip.end_date,
+              estimatedTotal: trip.total_cost,
+              currency: trip.currency || 'EUR',
+            },
+          }),
+        }).catch((err) => toast.error(`Email send failed: ${err.message}`));
+      }
+
+      // Send decline email
+      if (status === 'draft' && trip && functionsUrl && anonKey) {
+        fetch(`${functionsUrl}/send-email`, {
+          method: 'POST',
+          headers: emailHeaders,
+          body: JSON.stringify({
+            to: trip.email,
+            template: 'quote_declined',
+            locale: 'en',
+            data: {
+              name: trip.full_name,
+              destination: trip.destination_name,
+              reference: trip.id,
+            },
+          }),
+        }).catch((err) => toast.error(`Email send failed: ${err.message}`));
+      }
+
+      toast.success(`Trip ${status === 'draft' ? 'declined' : status} successfully`);
     } else {
-      console.error('Failed to update trip status:', error);
+      toast.error(`Failed to update trip status: ${error.message}`);
     }
   };
 
-  const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter);
+  // Filtering is now server-side; `requests` already contains only the current filter+page
+  const filtered = requests;
   const pendingCount = requests.filter((r) => r.status === 'submitted').length;
 
   const filterTabs: FilterTab[] = ['all', 'submitted', 'quoted', 'confirmed', 'paid', 'completed'];
@@ -360,7 +419,7 @@ export function QuoteReview() {
         {filterTabs.map((f) => (
           <button
             key={f}
-            onClick={() => setFilter(f)}
+            onClick={() => { setFilter(f); setPage(0); }}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
               filter === f ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
             }`}
@@ -392,6 +451,34 @@ export function QuoteReview() {
               </p>
             </div>
           )}
+
+          {/* Pagination */}
+          {totalCount > PAGE_SIZE && (() => {
+            const from = page * PAGE_SIZE;
+            const to = Math.min(from + filtered.length, totalCount);
+            const isLastPage = from + PAGE_SIZE >= totalCount;
+            return (
+              <div className="flex items-center justify-between border-t border-gray-200 px-6 py-3 mt-3 rounded-xl bg-white border border-slate-200">
+                <p className="text-sm text-gray-500">Showing {from + 1}&ndash;{to} of {totalCount}</p>
+                <div className="flex gap-2">
+                  <button
+                    disabled={page === 0}
+                    onClick={() => setPage((p) => p - 1)}
+                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    disabled={isLastPage}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

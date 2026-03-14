@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
+import { ImageUpload } from '../components/ImageUpload';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -47,17 +48,18 @@ const TAB_META: Record<
   activities: {
     label: 'Activities',
     table: 'activities',
-    nameCol: 'name',
+    nameCol: 'title',
     priceCol: 'price',
     categoryCol: 'category',
     categoryLabel: 'Category',
     priceLabel: 'Price',
     fields: [
-      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'title', label: 'Name', type: 'text' },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'category', label: 'Category', type: 'text' },
       { key: 'price', label: 'Price', type: 'number' },
-      { key: 'duration', label: 'Duration (min)', type: 'number' },
+      { key: 'duration', label: 'Duration (hours)', type: 'number' },
+      { key: 'location', label: 'Location', type: 'text' },
       { key: 'main_image_url', label: 'Image URL', type: 'text' },
       { key: 'tags', label: 'Tags (comma-separated)', type: 'tags' },
     ],
@@ -85,14 +87,17 @@ const TAB_META: Record<
     table: 'transports',
     nameCol: 'name',
     priceCol: 'price',
-    categoryCol: 'transport_type',
+    categoryCol: 'type',
     categoryLabel: 'Type',
     priceLabel: 'Price',
     fields: [
       { key: 'name', label: 'Name', type: 'text' },
-      { key: 'transport_type', label: 'Transport type', type: 'text' },
+      { key: 'type', label: 'Transport type', type: 'text' },
+      { key: 'provider', label: 'Provider', type: 'text' },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'price', label: 'Price', type: 'number' },
+      { key: 'duration', label: 'Duration', type: 'text' },
+      { key: 'pricing_unit', label: 'Pricing unit (per_trip, per_person, per_day)', type: 'text' },
       { key: 'main_image_url', label: 'Image URL', type: 'text' },
       { key: 'features', label: 'Features (comma-separated)', type: 'tags' },
     ],
@@ -133,6 +138,9 @@ export function Products() {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDestination, setFilterDestination] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 25;
 
   // Modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -152,28 +160,35 @@ export function Products() {
       });
   }, []);
 
-  /* ---------- fetch items when tab / filter changes ---------- */
+  /* ---------- fetch items when tab / filter / page changes ---------- */
   const fetchItems = useCallback(async () => {
     setLoading(true);
     setError(null);
     const meta = TAB_META[tab];
 
-    let query = supabase.from(meta.table as 'activities').select('*');
+    const from = page * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    let query = supabase.from(meta.table as 'activities').select('*', { count: 'exact' });
 
     if (filterDestination) {
       query = query.eq('destination_id', filterDestination);
     }
 
-    const { data, error: err } = await query.order('created_at', { ascending: false });
+    const { data, error: err, count } = await query
+      .order('created_at', { ascending: false })
+      .range(from, to);
 
     if (err) {
       setError(err.message);
       setItems([]);
+      setTotalCount(0);
     } else {
       setItems((data ?? []).map((r) => toItem(tab, r as unknown as Record<string, unknown>)));
+      setTotalCount(count ?? 0);
     }
     setLoading(false);
-  }, [tab, filterDestination]);
+  }, [tab, filterDestination, page]);
 
   useEffect(() => {
     fetchItems();
@@ -200,6 +215,21 @@ export function Products() {
         prev.map((i) => (i.id === item.id ? { ...i, is_active: !newVal } : i))
       );
       setError(`Failed to update status: ${err.message}`);
+    }
+  };
+
+  /* ---------- delete item ---------- */
+  const handleDelete = async (item: CatalogItem) => {
+    if (!window.confirm(`Delete "${item.name}"? This cannot be undone.`)) return;
+    const meta = TAB_META[tab];
+    const { error: err } = await supabase
+      .from(meta.table as 'activities')
+      .delete()
+      .eq('id', item.id);
+    if (err) {
+      setError(`Failed to delete: ${err.message}`);
+    } else {
+      setItems((prev) => prev.filter((i) => i.id !== item.id));
     }
   };
 
@@ -248,7 +278,8 @@ export function Products() {
 
     // --- Validation ---
     const errors: string[] = [];
-    if (!payload.name || !(payload.name as string).trim() || (payload.name as string).trim().length < 2) {
+    const nameVal = (payload[meta.nameCol] as string) ?? '';
+    if (!nameVal.trim() || nameVal.trim().length < 2) {
       errors.push('Name is required (minimum 2 characters).');
     }
     if (tab === 'activities') {
@@ -337,7 +368,7 @@ export function Products() {
           {TABS.map((t) => (
             <button
               key={t}
-              onClick={() => setTab(t)}
+              onClick={() => { setTab(t); setPage(0); }}
               className={`whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm ${
                 tab === t
                   ? 'border-blue-500 text-blue-600'
@@ -362,7 +393,7 @@ export function Products() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 placeholder={`Search ${meta.label.toLowerCase()}...`}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
               />
             </div>
 
@@ -372,7 +403,7 @@ export function Products() {
               <select
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 value={filterDestination}
-                onChange={(e) => setFilterDestination(e.target.value)}
+                onChange={(e) => { setFilterDestination(e.target.value); setPage(0); }}
               >
                 <option value="">All Destinations</option>
                 {destinations.map((d) => (
@@ -523,12 +554,20 @@ export function Products() {
                           <span className="text-gray-400 font-normal">/night</span>
                         )}
                       </span>
-                      <button
-                        className="text-sm text-blue-600 hover:text-blue-500"
-                        onClick={() => openEdit(item)}
-                      >
-                        Edit
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          className="text-sm text-blue-600 hover:text-blue-500"
+                          onClick={() => openEdit(item)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="text-sm text-red-600 hover:text-red-500"
+                          onClick={() => handleDelete(item)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -605,12 +644,18 @@ export function Products() {
                           {item.is_active ? 'Active' : 'Inactive'}
                         </button>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                         <button
                           className="text-blue-600 hover:text-blue-500"
                           onClick={() => openEdit(item)}
                         >
                           Edit
+                        </button>
+                        <button
+                          className="text-red-600 hover:text-red-500"
+                          onClick={() => handleDelete(item)}
+                        >
+                          Delete
                         </button>
                       </td>
                     </tr>
@@ -620,6 +665,34 @@ export function Products() {
             </div>
           )}
         </div>
+
+        {/* Pagination */}
+        {!loading && totalCount > PAGE_SIZE && (() => {
+          const from = page * PAGE_SIZE;
+          const to = Math.min(from + filtered.length, totalCount);
+          const isLastPage = from + PAGE_SIZE >= totalCount;
+          return (
+            <div className="flex items-center justify-between border-t border-gray-200 px-6 py-3">
+              <p className="text-sm text-gray-500">Showing {from + 1}&ndash;{to} of {totalCount}</p>
+              <div className="flex gap-2">
+                <button
+                  disabled={page === 0}
+                  onClick={() => setPage((p) => p - 1)}
+                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <button
+                  disabled={isLastPage}
+                  onClick={() => setPage((p) => p + 1)}
+                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* ============================================================ */}
@@ -668,7 +741,7 @@ export function Products() {
 
                 {/* Dynamic fields */}
                 {meta.fields.map((f) => {
-                  const isRequired = ['name', 'description', 'price', 'price_per_night', 'duration'].includes(f.key);
+                  const isRequired = ['name', 'title', 'description', 'price', 'price_per_night', 'duration', 'type'].includes(f.key);
                   return (
                   <div key={f.key}>
                     <label className="block text-sm font-medium text-gray-700">
@@ -709,6 +782,13 @@ export function Products() {
                         value={(formData[f.key] as number) ?? ''}
                         onChange={(e) =>
                           setFormData((prev) => ({ ...prev, [f.key]: e.target.value }))
+                        }
+                      />
+                    ) : f.key === 'main_image_url' ? (
+                      <ImageUpload
+                        value={(formData[f.key] as string) ?? ''}
+                        onChange={(url) =>
+                          setFormData((prev) => ({ ...prev, [f.key]: url }))
                         }
                       />
                     ) : (
