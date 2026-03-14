@@ -13,8 +13,8 @@ interface QuoteRequestPayload {
   currency: string;
   estimatedTotal: number;
   activities: Activity[];
-  accommodation: AccommodationType | null;
-  transport: TransportType | null;
+  accommodation?: AccommodationType | null;
+  transport?: TransportType | null;
 }
 
 export function useCreateQuoteRequest() {
